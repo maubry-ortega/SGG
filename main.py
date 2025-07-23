@@ -1,17 +1,29 @@
-from flask import Flask
+import threading
 import justpy as jp
+from app import create_app
 
-flask_app = Flask(__name__)
+# Crear instancia de la app Flask
+flask_app = create_app()
 
-@flask_app.route("/api/guias")
-def api_guias():
-    return {"guias": ["Guía 1", "Guía 2"]}
+# Ruta simple para probar que Flask funciona
+@flask_app.route("/api/ping")
+def ping():
+    return {"message": "pong"}
 
+# Interfaz visual con JustPy
 def gui_frontend():
     wp = jp.QuasarPage()
-    jp.QDiv(a=wp, text="Desde Flask + JustPy", classes="text-h5")
+    jp.QDiv(a=wp, text="Sistema Gestor de Guías (SGG)", classes="text-h3 text-center q-mt-xl")
     return wp
 
-# Levantar solo JustPy como app principal si no usas Flask puro
+# Lanzar JustPy en hilo paralelo para no bloquear Flask
+def run_justpy():
+    jp.justpy(gui_frontend, port=8080)
+
+# Main principal
 if __name__ == "__main__":
-    jp.justpy(gui_frontend)
+    # Iniciar JustPy en segundo plano
+    threading.Thread(target=run_justpy, daemon=True).start()
+
+    # Ejecutar Flask normalmente
+    flask_app.run(debug=True, port=5000)
