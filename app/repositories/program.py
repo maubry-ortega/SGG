@@ -4,7 +4,15 @@ class ProgramaRepository:
 
     @staticmethod
     def crear(data):
-        return ProgramaFormacion(**data).save()
+        try:
+            if not data:
+                return None
+            else:
+                return ProgramaFormacion(**data).save()
+        except Exception as error:
+            return None
+    
+
 
     @staticmethod
     def obtener_todos():

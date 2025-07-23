@@ -4,7 +4,10 @@ class ProgramaService:
 
     @staticmethod
     def crear_programa(data):
-        return ProgramaRepository.crear(data)
+        if not data:
+            return None
+        else:
+            return ProgramaRepository.crear(data)
 
     @staticmethod
     def listar_programas():

@@ -7,7 +7,10 @@ programa_bp = Blueprint('programa_bp', __name__, url_prefix='/api/programas')
 def crear_programa():
     data = request.get_json()
     programa = ProgramaService.crear_programa(data)
-    return jsonify(programa.to_dict()), 201
+    if not programa:
+        return jsonify({'error': 'Datos inválidos para crear el programa...'}), 400
+    else:
+        return jsonify(programa.to_dict()), 201
 
 @programa_bp.route('/', methods=['GET'])
 def listar_programas():
