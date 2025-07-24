@@ -4,10 +4,7 @@ class ProgramaService:
 
     @staticmethod
     def crear_programa(data):
-        if not data:
-            return None
-        else:
-            return ProgramaRepository.crear(data)
+        return ProgramaRepository.crear(data)
 
     @staticmethod
     def listar_programas():
@@ -15,11 +12,8 @@ class ProgramaService:
 
     @staticmethod
     def obtener_programa(id_):
-        programa = ProgramaRepository.obtener_por_id(id_)
-        if not programa:
-            raise ValueError("Programa no encontrado.")
-        return programa
-
+       return ProgramaRepository.obtener_por_id(id_)
+        
     @staticmethod
     def actualizar_programa(id_, data):
         return ProgramaRepository.actualizar(id_, data)

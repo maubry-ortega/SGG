@@ -7,10 +7,10 @@ programa_bp = Blueprint('programa_bp', __name__, url_prefix='/api/programas')
 def crear_programa():
     data = request.get_json()
     programa = ProgramaService.crear_programa(data)
-    if not programa:
+    if programa is None:
         return jsonify({'error': 'Datos inválidos para crear el programa...'}), 400
     else:
-        return jsonify(programa.to_dict()), 201
+        return programa
 
 @programa_bp.route('/', methods=['GET'])
 def listar_programas():
@@ -19,19 +19,16 @@ def listar_programas():
 
 @programa_bp.route('/<string:id_>', methods=['GET'])
 def obtener_programa(id_):
-    try:
-        programa = ProgramaService.obtener_programa(id_)
-        return jsonify(programa.to_dict()), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
+    programa = ProgramaService.obtener_programa(id_)
+    return (programa), 200
+
 
 @programa_bp.route('/<string:id_>', methods=['PUT'])
 def actualizar_programa(id_):
     data = request.get_json()
     programa = ProgramaService.actualizar_programa(id_, data)
-    return jsonify(programa.to_dict()), 200
+    return programa, 200
 
 @programa_bp.route('/<string:id_>', methods=['DELETE'])
 def eliminar_programa(id_):
-    ProgramaService.eliminar_programa(id_)
-    return jsonify({'mensaje': 'Programa eliminado correctamente'}), 200
+    return ProgramaService.eliminar_programa(id_), 200
