@@ -1,5 +1,5 @@
 # app/__init__.py
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from mongoengine import connect
 from dotenv import load_dotenv
@@ -47,5 +47,23 @@ def create_app():
     app.register_blueprint(programa_bp, url_prefix="/api/programas")
     app.register_blueprint(guia_bp, url_prefix="/api/guias")
     app.register_blueprint(region_bp, url_prefix="/api/regiones")
+
+    @app.route("/login")
+    def login():
+        return render_template("login.html")
+
+    @app.route("/registro")
+    def registro():
+        return render_template("registro.html")
+
+    @app.route("/exito")
+    def exito():
+        return render_template("exito.html")
+
+    @app.route("/error")
+    def error():
+        from flask import request
+        mensaje_error = request.args.get("msg", "Ha ocurrido un error.")
+        return render_template("error.html", mensaje_error=mensaje_error)
 
     return app

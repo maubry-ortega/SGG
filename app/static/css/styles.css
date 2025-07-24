@@ -1,0 +1,46 @@
+body {
+    background: #f8fafc;
+}
+
+form.shadow {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    background: #fff;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 2px #0d6efd33;
+    border-color: #0d6efd;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #0d6efd 60%, #4f8cff 100%);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+}
+
+.btn-success, .btn-danger {
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.invalid-feedback {
+    font-size: 0.95em;
+}
+
+#formMsg {
+    min-height: 24px;
+}

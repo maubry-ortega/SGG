@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Registro de Instructor{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form id="registroForm" class="shadow rounded p-4 bg-white">
+            <h2 class="mb-4 text-center">Registro de Instructor <i class="fa fa-user-plus"></i></h2>
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Nombre completo</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" required placeholder="Ej: Juan Pérez">
+                <div class="invalid-feedback">Ingrese su nombre completo.</div>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Ej: juan@email.com">
+                <div class="invalid-feedback">Ingrese un correo válido.</div>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Ej: juanperez">
+                <div class="invalid-feedback">Ingrese un nombre de usuario.</div>
+            </div>
+            <div class="mb-3">
+                <label for="region" class="form-label">Regional</label>
+                <select class="form-select" id="region" name="region" required>
+                    <option value="">Seleccione una región...</option>
+                </select>
+                <div class="invalid-feedback">Seleccione una región.</div>
+            </div>
+            <div id="formMsg" class="mb-3"></div>
+            <button type="submit" class="btn btn-primary w-100">
+                <span id="btnText">Registrar</span>
+                <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
