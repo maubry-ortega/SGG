@@ -1,4 +1,3 @@
-# VolleyDevByMaubry [7/∞]
 from app.models.instructor import Instructor
 from bson import ObjectId
 from mongoengine.errors import DoesNotExist, ValidationError
