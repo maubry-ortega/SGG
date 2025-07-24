@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-    <form action="/api/guias/Create" method="POST" enctype="multipart/form-data">
+    <form action="/api/guias/Create" method="POST" >
         <h2>Registrar Guía de Aprendizaje</h2>
         <div>
             <label for="nombre">Nombre Completo:</label>
@@ -20,6 +20,7 @@
         <div>
             <label for="programa">Programa:</label>
             <select id="programa" name="programa" required>
+                <option value="" disabled selected>Seleccione un programa</option>
                 {% for programa in programas %}
                     <option value="{{ programa['id'] }}">{{ programa['nombre'] }}</option>
                 {% endfor %}
@@ -29,10 +30,7 @@
             <label for="archivo">Archivo PDF:</label>
             <input type="file" id="archivo" name="archivo" accept="application/pdf" required>
         </div>
-        <div>
-            <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" required>
-        </div>
+        
         
         <div>
             <button type="submit">Registrar</button>

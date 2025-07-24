@@ -17,7 +17,7 @@ def crear_instructor():
 
 @instructor_bp.route("/", methods=["GET"])
 def listar_instructores():
-    instructores = InstructorService.obtener_todos()
+    instructores = InstructorService.()
     return jsonify([i.to_dict() for i in instructores]), 200
 
 @instructor_bp.route("/<string:id>", methods=["GET"])
