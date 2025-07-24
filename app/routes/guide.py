@@ -1,20 +1,32 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify,render_template
 from app.services.guide import GuiaService
-
+from app.services.program import ProgramaService
 guia_bp = Blueprint('guia_bp', __name__, url_prefix='/api/guias')
 
-@guia_bp.route('/', methods=['POST'])
+@guia_bp.route('/Create', methods=['POST', 'GET'])
 def crear_guia():
-    data = request.get_json()
-    guia = GuiaService.crear_guia(data)
-    return jsonify(guia.to_dict()), 201
+    try:
+        if request.method == 'GET':   
+            Programas = ProgramaService.listar_programas()
+            return render_template('form_guide.html',programas=Programas)
+        else:
+            data = request.form
+            if GuiaService.validarDatos(data):
+                dict_guide = GuiaService.dict_Guide(data)
+                guide= GuiaService.crear_guia(dict_guide)
+                return jsonify(guide.to_dict())
+            else:
+                return jsonify({"error": "Datos inválidos"})
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
+    
 @guia_bp.route('/', methods=['GET'])
 def listar_guias():
     guias = GuiaService.listar_guias()
     return jsonify([g.to_dict() for g in guias]), 200
 
-@guia_bp.route('/<string:id_>', methods=['GET'])
+@guia_bp.route('/buscar/<string:id_>', methods=['GET'])
 def obtener_guia(id_):
     try:
         guia = GuiaService.obtener_guia(id_)

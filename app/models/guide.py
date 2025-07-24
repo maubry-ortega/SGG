@@ -6,20 +6,20 @@ from .instructor import Instructor
 from .program import ProgramaFormacion
 
 class GuiaAprendizaje(Document):
-    nombre = StringField(required=True)
-    descripcion = StringField()
-    programa = ReferenceField(ProgramaFormacion, required=True)
-    archivo_pdf = StringField(required=True)
-    fecha = DateTimeField(default=datetime.utcnow)
+    full_name = StringField(required=True)
+    description = StringField()
+    program = ReferenceField(ProgramaFormacion, required=True)
+    pdf_file = StringField(required=True)
+    date = DateTimeField(default=datetime.utcnow)
     instructor = ReferenceField(Instructor, required=True)
 
     def to_dict(self):
         return {
             "id": str(self.id),
-            "nombre": self.nombre,
-            "descripcion": self.descripcion,
-            "archivo_pdf": self.archivo_pdf,
-            "fecha": self.fecha.isoformat(),
-            "programa": self.programa.to_dict() if self.programa else None,
+            "full_name": self.full_name,
+            "description": self.description,
+            "pdf_file": self.pdf_file,
+            "date": self.date.isoformat(),
+            "program": self.program.to_dict() if self.program else None,
             "instructor": self.instructor.to_dict() if self.instructor else None
         }

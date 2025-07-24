@@ -27,7 +27,6 @@ class ProgramaRepository:
             mensaje = f"Error inesperado al obtener programas: {str(error)}"
             return {"mensaje":mensaje}
 
-        return ProgramaFormacion.objects()
 
     @staticmethod
     def obtener_por_id(id_):
