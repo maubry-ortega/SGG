@@ -10,6 +10,7 @@ class GuiaRepository:
         except Exception as error:
             mensaje = f"Error inesperado al crear la guía: {str(error)}"
             return {"Error": mensaje}
+            
     
 
     @staticmethod

@@ -1,3 +1,4 @@
+# VolleyDevByMaubry [9/∞]
 from flask import Blueprint, request, jsonify
 from app.services.instructor import InstructorService
 
@@ -11,12 +12,12 @@ def crear_instructor():
         return jsonify(instructor.to_dict()), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
-    except Exception:
+    except Exception as e:
         return jsonify({"error": "Error interno del servidor"}), 500
 
 @instructor_bp.route("/", methods=["GET"])
 def listar_instructores():
-    instructores = InstructorService.()
+    instructores = InstructorService.obtener_todos()
     return jsonify([i.to_dict() for i in instructores]), 200
 
 @instructor_bp.route("/<string:id>", methods=["GET"])
