@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+    <form action="/api/guias/Create" method="POST" enctype="multipart/form-data">
+        <h2>Registrar Guía de Aprendizaje</h2>
+        <div>
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div>
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion"></textarea>
+        </div>
+        <div>
+            <label for="programa">Programa:</label>
+            <select id="programa" name="programa" required>
+                {% for programa in programas %}
+                    <option value="{{ programa['id'] }}">{{ programa['nombre'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="archivo">Archivo PDF:</label>
+            <input type="file" id="archivo" name="archivo" accept="application/pdf" required>
+        </div>
+        <div>
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+        </div>
+        
+        <div>
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

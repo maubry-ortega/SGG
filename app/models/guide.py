@@ -3,26 +3,23 @@
 from mongoengine import Document, StringField, DateTimeField, ReferenceField, FileField
 from datetime import datetime
 from .instructor import Instructor
-from .programa import ProgramaFormacion
+from .program import ProgramaFormacion
 
 class GuiaAprendizaje(Document):
-    meta = {"collection": "guias_aprendizaje"}
-
-    nombre = StringField(required=True)
-    descripcion = StringField()
-    programa = ReferenceField(ProgramaFormacion, required=True)
-    archivo_pdf = StringField(required=True)  # Ruta al archivo en /uploads
-    fecha = DateTimeField(default=datetime.utcnow)
+    full_name = StringField(required=True)
+    description = StringField()
+    program = ReferenceField(ProgramaFormacion, required=True)
+    pdf_file = StringField(required=True)
+    date = DateTimeField(default=datetime)
     instructor = ReferenceField(Instructor, required=True)
 
     def to_dict(self):
         return {
             "id": str(self.id),
-            "nombre": self.nombre,
-            "descripcion": self.descripcion,
-            "programa": self.programa.nombre if self.programa else None,
-            "archivo_pdf": self.archivo_pdf,
-            "fecha": self.fecha.strftime("%Y-%m-%d %H:%M:%S"),
-            "instructor": self.instructor.nombre_completo if self.instructor else None,
-            "regional": self.instructor.regional if self.instructor else None,
+            "full_name": self.full_name,
+            "description": self.description,
+            "pdf_file": self.pdf_file,
+            "date": self.date.isoformat(),
+            "program": self.program.to_dict() if self.program else None,
+            "instructor": self.instructor.to_dict() if self.instructor else None
         }

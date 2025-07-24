@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Error en el Registro{% endblock %}
+{% block content %}
+<div class="text-center mt-5">
+    <i class="fa fa-times-circle fa-3x text-danger mb-3"></i>
+    <h2>¡Ha ocurrido un error!</h2>
+    <p>{{ mensaje_error }}</p>
+    <a href="/login" class="btn btn-danger mt-3">Volver al inicio</a>
+</div>
+{% endblock %}
