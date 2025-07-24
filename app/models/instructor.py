@@ -1,21 +1,21 @@
-# VolleyDevByMaubry [1/∞]
+# VolleyDevByMaubry [6/∞]
 # El conocimiento solo florece cuando se comparte.
-from mongoengine import Document, StringField
-import uuid
+from mongoengine import Document, StringField, ReferenceField
+from .region import Region
 
 class Instructor(Document):
-    nombre_completo = StringField(required=True, max_length=120)
-    correo = StringField(required=True, unique=True)
-    regional = StringField(required=True, choices=["Cauca", "Huila", "Antioquia", "Valle", "Nariño"])
-    usuario = StringField(required=True, unique=True)
-    contraseña = StringField(required=True)
+    full_name = StringField(required=True, max_length=120)
+    email = StringField(required=True, unique=True)
+    region = ReferenceField(Region, required=True)
+    username = StringField(required=True, unique=True)
+    password = StringField(required=True)
 
     def to_dict(self):
         return {
-            "uid": str(self.id),
-            "nombre_completo": self.nombre_completo,
-            "correo": self.correo,
-            "regional": self.regional,
-            "usuario": self.usuario
-            # Ojo: no devuelvas la contraseña en producción
+            "id": str(self.id),
+            "full_name": self.full_name,
+            "email": self.email,
+            "region": self.region.name if self.region else None,
+            "username": self.username
+            # No incluimos password por seguridad
         }
