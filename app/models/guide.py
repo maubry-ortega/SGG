@@ -3,15 +3,13 @@
 from mongoengine import Document, StringField, DateTimeField, ReferenceField, FileField
 from datetime import datetime
 from .instructor import Instructor
-from .programa import ProgramaFormacion
+from .program import ProgramaFormacion
 
 class GuiaAprendizaje(Document):
-    meta = {"collection": "guias_aprendizaje"}
-
     nombre = StringField(required=True)
     descripcion = StringField()
     programa = ReferenceField(ProgramaFormacion, required=True)
-    archivo_pdf = StringField(required=True)  # Ruta al archivo en /uploads
+    archivo_pdf = StringField(required=True)
     fecha = DateTimeField(default=datetime.utcnow)
     instructor = ReferenceField(Instructor, required=True)
 
@@ -20,9 +18,8 @@ class GuiaAprendizaje(Document):
             "id": str(self.id),
             "nombre": self.nombre,
             "descripcion": self.descripcion,
-            "programa": self.programa.nombre if self.programa else None,
             "archivo_pdf": self.archivo_pdf,
-            "fecha": self.fecha.strftime("%Y-%m-%d %H:%M:%S"),
-            "instructor": self.instructor.nombre_completo if self.instructor else None,
-            "regional": self.instructor.regional if self.instructor else None,
+            "fecha": self.fecha.isoformat(),
+            "programa": self.programa.to_dict() if self.programa else None,
+            "instructor": self.instructor.to_dict() if self.instructor else None
         }
