@@ -11,6 +11,7 @@ def crear_guia():
             return render_template('form_guide.html',programas=Programas)
         else:
             data = request.form
+            guide_date
             if GuiaService.validarDatos(data):
                 dict_guide = GuiaService.dict_Guide(data)
                 guide= GuiaService.crear_guia(dict_guide)

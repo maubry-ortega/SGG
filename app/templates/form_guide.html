@@ -19,7 +19,7 @@
         </div>
         <div>
             <label for="programa">Programa:</label>
-            <select id="programa" name="programa" required aria-placeholder="Seleccione un programa">
+            <select id="programa" name="programa" required>
                 {% for programa in programas %}
                     <option value="{{ programa['id'] }}">{{ programa['nombre'] }}</option>
                 {% endfor %}
