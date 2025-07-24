@@ -10,7 +10,7 @@ class GuiaAprendizaje(Document):
     description = StringField()
     program = ReferenceField(ProgramaFormacion, required=True)
     pdf_file = StringField(required=True)
-    date = DateTimeField(default=datetime.utcnow)
+    date = DateTimeField(default=datetime)
     instructor = ReferenceField(Instructor, required=True)
 
     def to_dict(self):
