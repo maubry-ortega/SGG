@@ -15,8 +15,8 @@ def login():
         password = request.form.get("password")
         instructor = InstructorRepository.obtener_por_username(username)
         if instructor and instructor.password == password:
-            session["instructor_id"] = str(instructor.id)  # Guarda el ID del instructor en sesión
-            return redirect(url_for("auth.formulario_guia"))
+            session["instructor_id"] = str(instructor.id)
+            return redirect(url_for("auth.menu"))
         else:
             flash("Usuario o contraseña incorrectos", "danger")
     return render_template("login.html")
@@ -32,9 +32,23 @@ def formulario_guia():
 
 @auth_bp.route("/exito")
 def exito():
-    return render_template("exito.html")
+    # Después del registro exitoso, mostrar el menú principal
+    return render_template("menu.html")
+# Ruta para el menú principal
+@auth_bp.route("/menu")
+def menu():
+    # Solo mostrar si el usuario está autenticado
+    if "instructor_id" not in session:
+        return redirect(url_for("auth.login"))
+    return render_template("menu.html")
 
 @auth_bp.route("/error")
 def error():
     mensaje_error = request.args.get("msg", "Ha ocurrido un error.")
     return render_template("error.html", mensaje_error=mensaje_error)
+
+# Ruta para cerrar sesión
+@auth_bp.route("/logout")
+def logout():
+    session.pop("instructor_id", None)
+    return redirect(url_for("auth.login"))
