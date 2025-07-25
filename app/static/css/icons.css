@@ -1,0 +1,32 @@
+/* icons.css: iconos SVG para reemplazar FontAwesome */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.2em;
+  height: 1.2em;
+  fill: currentColor;
+}
+
+.icon-check {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="%23198754" d="M13.485 1.929a1 1 0 0 1 0 1.414l-7.07 7.07a1 1 0 0 1-1.415 0l-2.12-2.12a1 1 0 1 1 1.415-1.415l1.414 1.415 6.364-6.364a1 1 0 0 1 1.414 0z"/></svg>') no-repeat center/contain;
+}
+
+.icon-times {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="%23dc3545" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>') no-repeat center/contain;
+}
+
+.icon-user-plus {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="%230d6efd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4.5 8a.5.5 0 0 1-.5-.5V13a4.5 4.5 0 0 0-9 0v2.5a.5.5 0 0 1-1 0V13a5.5 5.5 0 0 1 11 0v2.5a.5.5 0 0 1-.5.5z"/></svg>') no-repeat center/contain;
+}
+
+.icon-sign-in {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="%230d6efd" d="M10.293 8.707a1 1 0 0 1-1.414-1.414L12.586 4H7a1 1 0 0 1 0-2h7a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V4.414l-4.293 4.293z"/></svg>') no-repeat center/contain;
+}
+
+.icon-check-circle {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="%23198754"/><path fill="#fff" d="M11.03 6.97a.75.75 0 0 0-1.06-1.06L7.5 8.44l-1.47-1.47a.75.75 0 1 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3-3z"/></svg>') no-repeat center/contain;
+}
+
+.icon-times-circle {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="%23dc3545"/><path fill="#fff" d="M10.47 5.53a.75.75 0 0 0-1.06-1.06L8 6.94l-1.41-1.41a.75.75 0 1 0-1.06 1.06L6.94 8l-1.41 1.41a.75.75 0 1 0 1.06 1.06L8 9.06l1.41 1.41a.75.75 0 1 0 1.06-1.06L9.06 8l1.41-1.41z"/></svg>') no-repeat center/contain;
+}
