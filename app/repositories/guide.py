@@ -4,7 +4,14 @@ class GuiaRepository:
 
     @staticmethod
     def crear(data):
-        return GuiaAprendizaje(**data).save()
+        try:
+            guia = GuiaAprendizaje(**data).save()
+            return {"Guia": guia.to_dict()}
+        except Exception as error:
+            mensaje = f"Error inesperado al crear la guía: {str(error)}"
+            return {"Error": mensaje}
+            
+    
 
     @staticmethod
     def obtener_todos():

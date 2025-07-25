@@ -4,13 +4,14 @@ from mongoengine import Document, StringField, DateTimeField, ReferenceField, Fi
 from datetime import datetime
 from .instructor import Instructor
 from .program import ProgramaFormacion
+from datetime import datetime
 
 class GuiaAprendizaje(Document):
     full_name = StringField(required=True)
     description = StringField()
     program = ReferenceField(ProgramaFormacion, required=True)
     pdf_file = StringField(required=True)
-    date = DateTimeField(default=datetime)
+    date = DateTimeField(default=datetime.now)
     instructor = ReferenceField(Instructor, required=True)
 
     def to_dict(self):

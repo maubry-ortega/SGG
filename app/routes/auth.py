@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app.repositories.instructor import InstructorRepository
 from app.repositories.program import ProgramaRepository
 
@@ -15,6 +15,7 @@ def login():
         password = request.form.get("password")
         instructor = InstructorRepository.obtener_por_username(username)
         if instructor and instructor.password == password:
+            session["instructor_id"] = str(instructor.id)  # Guarda el ID del instructor en sesión
             return redirect(url_for("auth.formulario_guia"))
         else:
             flash("Usuario o contraseña incorrectos", "danger")
