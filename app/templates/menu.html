@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Menú Principal{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 60px;">
+    <h2 class="text-center mb-4" style="color: var(--primary);">Menú Principal</h2>
+    <div class="list-group shadow">
+        <a href="/api/guias/Create" class="list-group-item list-group-item-action d-flex align-items-center">
+            <i class="icon icon-user-plus me-2"></i> Crear nueva Guía de Aprendizaje
+        </a>
+        <a href="/guias/" class="list-group-item list-group-item-action d-flex align-items-center">
+            <i class="icon icon-check me-2"></i> Ver Guías Subidas
+        </a>
+        <a href="/logout" class="list-group-item list-group-item-action d-flex align-items-center text-danger">
+            <i class="icon icon-sign-in me-2"></i> Cerrar Sesión
+        </a>
+    </div>
+</div>
+{% endblock %}
