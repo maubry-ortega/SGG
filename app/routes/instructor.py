@@ -10,13 +10,10 @@ def crear_instructor():
     try:
         data = request.get_json()
         instructor=InstructorService.crear_instructor(data)
-        print("instructor listo:",instructor)
         return {"instructor":instructor}
     except ValueError as e:
-        print(str(e))
         return jsonify({"error": str(e)}), 400
     except Exception as e:
-        print(str(e))
         return jsonify({"error": "Error interno del servidor"}), 500
 
 @instructor_bp.route("/exito")

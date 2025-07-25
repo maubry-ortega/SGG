@@ -14,7 +14,6 @@ class InstructorService:
 
     @staticmethod
     def crear_instructor(data):
-        print("holamundo")
         campos_requeridos = ["full_name", "email", "region", "username"]
         for campo in campos_requeridos:
             if not data.get(campo):
@@ -25,16 +24,13 @@ class InstructorService:
 
         if InstructorRepository.obtener_por_username(data["username"]):
             raise ValueError("Ya existe un instructor con este nombre de usuario.")
-        print("try para obtener regiones")
         try:
             region = Region.objects.get(id=data["region"])
-            print("region obtenida con exito: " )
         except Region.DoesNotExist:
             raise ValueError("La región especificada no existe.")
 
         # 1. Generar contraseña aleatoria
         password_generada = InstructorService._generar_password()
-        print("json de creacion")
         datos_creacion = {
             "full_name": data["full_name"],
             "email": data["email"],
@@ -42,21 +38,17 @@ class InstructorService:
             "username": data["username"],
             "password": password_generada  # 2. Asignar la contraseña generada
         }
-        print("try para crear instructor")
         try:
             # 3. Crear instructor en la base de datos
             instructor = InstructorRepository.crear(datos_creacion)
-            print("instructor creado")
             # 4. Enviar credenciales al correo
             enviar_credenciales(
                 email=data["email"],
                 username=data["username"],
                 password=password_generada
             )
-            print("listo para retornar instructor")
             return instructor
         except (ValidationError, NotUniqueError) as e:
-            print(f"error capturado:{str(e)}")
             raise ValueError(f"No se pudo crear el instructor: {str(e)}")
 
     @staticmethod
