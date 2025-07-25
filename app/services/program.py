@@ -8,6 +8,7 @@ class ProgramaService:
 
     @staticmethod
     def listar_programas():
+        print("Listando programas...")
         return ProgramaRepository.obtener_todos()
 
     @staticmethod

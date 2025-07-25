@@ -1,4 +1,9 @@
+import os
+from flask import session
+from datetime import datetime
 from app.repositories.guide import GuiaRepository
+from app.models.instructor import Instructor
+from app.models.program import ProgramaFormacion
 
 class GuiaService:
 
@@ -31,35 +36,44 @@ class GuiaService:
 
     @staticmethod
     def guardar_pdf(pdf_file):
-        
-        if pdf_file:
-            pdf_path = f'app/uploads/{pdf_file}'
+        if pdf_file and hasattr(pdf_file, 'filename'):
+            uploads_dir = 'app/uploads'
+            os.makedirs(uploads_dir, exist_ok=True) 
+            filename = pdf_file.filename
+            pdf_path = os.path.join(uploads_dir, filename)
             pdf_file.save(pdf_path)
-            ##data = data.to_dict()
-            ##data['pdf_path'] = pdf_path
-        else:
-            return None
-        return True
-        
+            return filename
+        return None
+
     @staticmethod
-    def validarDatos(data):
-        if  GuiaService.guardar_pdf(data.get('archivo')):
-            return {"error":"No se guardó...No se anexó ningun PDF..."}
+    def validarDatos(data, archivo):
+        if not archivo or not hasattr(archivo, 'filename') or archivo.filename == '':
+            return {"error": "No se anexó ningún PDF."}
         if not data.get('nombre'):
-            return {"error":"El nombre es obligatorio."}
+            return {"error": "El nombre es obligatorio."}
         if not data.get('descripcion'):
-            return {"error":"La descripción es obligatoria."}
+            return {"error": "La descripción es obligatoria."}
         if not data.get('programa'):
-            return {"error":"El programa es obligatorio."}
-        else:
-            return True
-        
+            return {"error": "El programa es obligatorio."}
+        return True
+
+    @staticmethod
     def dict_Guide(data):
+        fecha_str = data.get("fecha")
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d') if fecha_str else datetime.now()
+
+        instructor_id = session.get("instructor_id")
+        if not instructor_id:
+            raise ValueError("Instructor no autenticado.")
+
+        instructor = Instructor.objects.get(id=instructor_id)
+        programa = ProgramaFormacion.objects.get(id=data.get("programa"))
+
         return {
-            "nombre": data.get("nombre"),
-            "descripcion": data.get("descripcion"),
-            "fecha": data.get("fecha"),
-            "programa": data.get("programa"),
-            "pdf_file": f'app/uploads/{data["archivo"].filename}',
-            
+            "full_name": data.get("nombre"),
+            "description": data.get("descripcion"),
+            "date": fecha,
+            "program": programa,
+            "pdf_file": f'app/uploads/{data.get("archivo")}',
+            "instructor": instructor
         }

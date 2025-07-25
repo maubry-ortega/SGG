@@ -1,11 +1,10 @@
-# app/__init__.py
 from flask import Flask
 from flask_cors import CORS
 from mongoengine import connect
 from dotenv import load_dotenv
 import os
 
-# Cargar variables de entorno
+# Load environment variables
 load_dotenv()
 
 # Blueprints
@@ -14,30 +13,30 @@ from .routes.program import programa_bp
 from .routes.guide import guia_bp
 from .routes.region import region_bp
 from .routes.auth import auth_bp
-from .routes.guia_list import lista_guias_bp
+from .routes.guia_list import guide_list_bp  # CAMBIADO A NOMBRE EN INGLÉS
 
 def create_app():
     app = Flask(__name__)
 
-    # Configuración general
+    # App config
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "clave-super-secreta")
 
-    # MongoDB
+    # MongoDB config
     connect(
         db=os.getenv("MONGODB_DB", "sgg_db"),
         host=os.getenv("MONGODB_URI", "mongodb://localhost:27017/sgg_db"),
         alias="default"
     )
 
-    # CORS
+    # Enable CORS
     CORS(app, supports_credentials=True)
 
-    # Registro de Blueprints
-    app.register_blueprint(instructor_bp, url_prefix="/api/instructores")
-    app.register_blueprint(programa_bp, url_prefix="/api/programas")
-    app.register_blueprint(guia_bp, url_prefix="/api/guias")
-    app.register_blueprint(region_bp, url_prefix="/api/regiones")
+    # Register Blueprints
+    app.register_blueprint(instructor_bp, url_prefix="/api/instructors")
+    app.register_blueprint(programa_bp, url_prefix="/api/programs")
+    app.register_blueprint(guia_bp, url_prefix="/api/guides")
+    app.register_blueprint(region_bp, url_prefix="/api/regions")
     app.register_blueprint(auth_bp)
-    app.register_blueprint(lista_guias_bp)
+    app.register_blueprint(guide_list_bp)  # CAMBIADO A NUEVO NOMBRE
 
     return app

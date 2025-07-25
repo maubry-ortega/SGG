@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-    <form action="/api/guias/Create" method="POST" >
+    <form action="/api/guias/Create" method="POST" enctype="multipart/form-data">
         <h2>Registrar Guía de Aprendizaje</h2>
         <div>
             <label for="nombre">Nombre Completo:</label>
@@ -22,7 +22,7 @@
             <select id="programa" name="programa" required>
                 <option value="" disabled selected>Seleccione un programa</option>
                 {% for programa in programas %}
-                    <option value="{{ programa['id'] }}">{{ programa['nombre'] }}</option>
+                    <option value="{{ programa.id }}">{{ programa.name }}</option>
                 {% endfor %}
             </select>
         </div>
