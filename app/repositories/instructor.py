@@ -8,7 +8,7 @@ class InstructorRepository:
     def crear(data):
         instructor = Instructor(**data)
         instructor.save()
-        return instructor
+        return instructor.to_dict()
 
     @staticmethod
     def obtener_todos():

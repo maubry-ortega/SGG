@@ -33,7 +33,7 @@ class GuiaService:
     def guardar_pdf(pdf_file):
         
         if pdf_file:
-            pdf_path = f'app/uploads/{pdf_file.filename}'
+            pdf_path = f'app/uploads/{pdf_file}'
             pdf_file.save(pdf_path)
             ##data = data.to_dict()
             ##data['pdf_path'] = pdf_path
@@ -49,10 +49,10 @@ class GuiaService:
             return {"error":"El nombre es obligatorio."}
         if not data.get('descripcion'):
             return {"error":"La descripción es obligatoria."}
-        if not data.get('fecha'):
-            return {"error":"La fecha es obligatoria."}
         if not data.get('programa'):
             return {"error":"El programa es obligatorio."}
+        else:
+            return True
         
     def dict_Guide(data):
         return {
@@ -60,5 +60,6 @@ class GuiaService:
             "descripcion": data.get("descripcion"),
             "fecha": data.get("fecha"),
             "programa": data.get("programa"),
-            "pdf_path": f'app/uploads/{data["archivo"].filename}'
+            "pdf_file": f'app/uploads/{data["archivo"].filename}',
+            
         }
