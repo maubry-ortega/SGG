@@ -14,6 +14,7 @@ def crear_programa():
 
 @programa_bp.route('/', methods=['GET'])
 def listar_programas():
+    print("Listando programas...")
     programas = ProgramaService.listar_programas()
     return jsonify([p.to_dict() for p in programas]), 200
 

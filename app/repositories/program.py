@@ -5,13 +5,13 @@ class ProgramaRepository:
     @staticmethod
     def crear(data):
         try:
-            if data['nombre'] == '' or data['nombre'] is None:
-                return {"Error": "El campo 'nombre'no puede ser vacio y es obligatorio para crear un programa."}
+            if data['name'] == '' or data['name'] is None:
+                return {"Error": "El campo 'name'no puede ser vacio y es obligatorio para crear un programa."}
             else:
                 programa=ProgramaFormacion(**data).save()
                 return {"programa": programa.to_dict()}
         except NotUniqueError as error:
-            mensaje= f"El nombre del programa ya existe!...Error:  {str(error)}"
+            mensaje= f"El name del programa ya existe!...Error:  {str(error)}"
             return {"Error":mensaje}
         except Exception as error:
             mensaje = f"Error inesperado al crear el programa: {str(error)}"
@@ -46,8 +46,8 @@ class ProgramaRepository:
     @staticmethod
     def actualizar(id_, data):
         try:
-            if data['nombre'] == '' or data['nombre'] is None:
-                return {"Error": "El campo 'nombre' no puede ser vacio y es obligatorio para actualizar un programa."}
+            if data['name'] == '' or data['name'] is None:
+                return {"Error": "El campo 'name' no puede ser vacio y es obligatorio para actualizar un programa."}
             else:
                 ProgramaFormacion.objects(id=id_).update_one(**data)
                 programa = ProgramaFormacion.objects(id=id_).first()

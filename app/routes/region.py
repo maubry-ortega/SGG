@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.region import RegionService
 
-region_bp = Blueprint("region", __name__)
+region_bp = Blueprint("regiones_bp", __name__,url_prefix="/api/regiones")
 
 @region_bp.route("/", methods=["GET"])
 def listar_regiones():
