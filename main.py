@@ -4,7 +4,7 @@ from app import create_app
 app = create_app()
 
 # Ruta simple para probar que Flask funciona
-@flask_app.route("/api/ping")
+@app.route("/api/ping")
 def ping():
     return {"message": "pong"}
 
