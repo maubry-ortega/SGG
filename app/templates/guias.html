@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Guías{% endblock %}
+{% block content %}
+<h2 class="text-center mb-3" style="color: var(--primary);">Guías de Aprendizaje</h2>
+
+<input type="text" id="searchInput" class="form-control" placeholder="Buscar guías...">
+
+<div class="table-responsive">
+  <table class="table-custom" id="guiasTable">
+    <thead>
+      <tr>
+        <th>Nombre Guía</th>
+        <th>Descripción</th>
+        <th>Programa</th>
+        <th>Instructor</th>
+        <th>Regional</th>
+        <th>Fecha</th>
+        <th>PDF</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for guia in guias %}
+      <tr>
+        <td>{{ guia.nombre }}</td>
+        <td>{{ guia.descripcion }}</td>
+        <td>{{ guia.programa }}</td>
+        <td>{{ guia.instructor }}</td>
+        <td>{{ guia.regional }}</td>
+        <td>{{ guia.fecha }}</td>
+        <td>
+          {% if guia.pdf_url %}
+          <a href="{{ guia.pdf_url }}" target="_blank" class="btn btn-link">Ver</a>
+          {% else %}-{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="pagination" class="pagination"></div>
+{% endblock %}

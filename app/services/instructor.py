@@ -30,19 +30,28 @@ class InstructorService:
         except Region.DoesNotExist:
             raise ValueError("La región especificada no existe.")
 
-        password = InstructorService._generar_password()
+        # 1. Generar contraseña aleatoria
+        password_generada = InstructorService._generar_password()
 
         datos_creacion = {
             "full_name": data["full_name"],
             "email": data["email"],
             "region": region,
             "username": data["username"],
-            "password": password
+            "password": password_generada  # 2. Asignar la contraseña generada
         }
 
         try:
+            # 3. Crear instructor en la base de datos
             instructor = InstructorRepository.crear(datos_creacion)
-            enviar_credenciales(data["email"], data["username"], password)
+
+            # 4. Enviar credenciales al correo
+            enviar_credenciales(
+                email=data["email"],
+                username=data["username"],
+                password=password_generada
+            )
+
             return instructor
         except (ValidationError, NotUniqueError) as e:
             raise ValueError(f"No se pudo crear el instructor: {str(e)}")
