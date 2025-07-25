@@ -32,10 +32,10 @@ def create_app():
     CORS(app, supports_credentials=True)
 
     # Register Blueprints
-    app.register_blueprint(instructor_bp, url_prefix="/api/instructors")
-    app.register_blueprint(programa_bp, url_prefix="/api/programs")
-    app.register_blueprint(guia_bp, url_prefix="/api/guides")
-    app.register_blueprint(region_bp, url_prefix="/api/regions")
+    app.register_blueprint(instructor_bp)
+    app.register_blueprint(programa_bp)
+    app.register_blueprint(guia_bp)
+    app.register_blueprint(region_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(guide_list_bp)  # CAMBIADO A NUEVO NOMBRE
 
