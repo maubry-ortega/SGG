@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 from app.services.guide import GuiaService
 from app.services.program import ProgramaService
 
@@ -19,12 +19,15 @@ def crear_guia():
                 return jsonify(validacion)
 
             nombre_pdf = GuiaService.guardar_pdf(archivo)
-            form_data['archivo'] = nombre_pdf  # Se convierte en string
+            form_data['archivo'] = nombre_pdf
 
             dict_guide = GuiaService.dict_Guide(form_data)
             guia = GuiaService.crear_guia(dict_guide)
 
-            return jsonify(guia)
+            return redirect(url_for('guide_list_bp.list_guides'))
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
     except Exception as e:
         return jsonify({"error": str(e)})
 
