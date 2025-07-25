@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Registro de Instructor{% endblock %}
+
 {% block content %}
 <div class="card-form">
     <h2 class="mb-4 text-center">Registro de Instructor <i class="icon icon-user-plus"></i></h2>
@@ -33,4 +34,8 @@
         </button>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/registro.js') }}"></script>
 {% endblock %}

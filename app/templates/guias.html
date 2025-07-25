@@ -18,25 +18,12 @@
         <th>PDF</th>
       </tr>
     </thead>
-    <tbody>
-      {% for guia in guias %}
-      <tr>
-        <td>{{ guia.nombre }}</td>
-        <td>{{ guia.descripcion }}</td>
-        <td>{{ guia.programa }}</td>
-        <td>{{ guia.instructor }}</td>
-        <td>{{ guia.regional }}</td>
-        <td>{{ guia.fecha }}</td>
-        <td>
-          {% if guia.pdf_url %}
-          <a href="{{ guia.pdf_url }}" target="_blank" class="btn btn-link">Ver</a>
-          {% else %}-{% endif %}
-        </td>
-      </tr>
-      {% endfor %}
+    <tbody id="guiasBody">
+      <!-- Aquí se insertarán las filas con JS -->
     </tbody>
   </table>
 </div>
 
-<div id="pagination" class="pagination"></div>
+<div id="pagination" class="pagination mt-3"></div>
+<script src="{{ url_for('static', filename='js/guias.js') }}"></script>
 {% endblock %}
