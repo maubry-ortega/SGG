@@ -1,35 +1,34 @@
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for
+from flask import Blueprint, request, jsonify
 from app.services.guide import GuiaService
-from app.services.program import ProgramaService
+from app.utils.security import token_required
 
 guia_bp = Blueprint('guia_bp', __name__, url_prefix='/api/guias')
 
-@guia_bp.route('/Create', methods=['POST', 'GET'])
-def crear_guia():
+@guia_bp.route('/', methods=['POST'])
+@token_required
+def crear_guia(current_user):
     try:
-        if request.method == 'GET':   
-            Programas = ProgramaService.listar_programas()
-            return render_template('form_guide.html', programas=Programas)
-        else:
-            form_data = request.form.to_dict()
-            archivo = request.files.get('archivo')
+        # En una API, el frontend enviará FormData si hay archivos
+        form_data = request.form.to_dict()
+        archivo = request.files.get('archivo')
 
-            validacion = GuiaService.validarDatos(form_data, archivo)
-            if validacion is not True:
-                return jsonify(validacion)
+        validacion = GuiaService.validarDatos(form_data, archivo)
+        if validacion is not True:
+            return jsonify(validacion), 400
 
-            nombre_pdf = GuiaService.guardar_pdf(archivo)
-            form_data['archivo'] = nombre_pdf
+        nombre_pdf = GuiaService.guardar_pdf(archivo)
+        form_data['archivo'] = nombre_pdf
 
-            dict_guide = GuiaService.dict_Guide(form_data)
-            guia = GuiaService.crear_guia(dict_guide)
+        # Pasamos el current_user (instructor) al servicio
+        dict_guide = GuiaService.dict_Guide(form_data, current_user)
+        guia = GuiaService.crear_guia(dict_guide)
 
-            return redirect(url_for('guide_list_bp.list_guides'))
+        return jsonify(guia.to_dict()), 201
     except Exception as e:
-        return jsonify({"error": str(e)})
-    
-    except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 @guia_bp.route('/', methods=['GET'])
 def listar_guias():
@@ -50,12 +49,20 @@ def listar_guias_por_programa(id_programa):
     return jsonify([g.to_dict() for g in guias]), 200
 
 @guia_bp.route('/<string:id_>', methods=['PUT'])
-def actualizar_guia(id_):
-    data = request.get_json()
-    guia = GuiaService.actualizar_guia(id_, data)
-    return jsonify(guia.to_dict()), 200
+@token_required
+def actualizar_guia(current_user, id_):
+    try:
+        data = request.get_json()
+        guia = GuiaService.actualizar_guia(id_, data)
+        return jsonify(guia.to_dict()), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 @guia_bp.route('/<string:id_>', methods=['DELETE'])
-def eliminar_guia(id_):
-    GuiaService.eliminar_guia(id_)
-    return jsonify({'mensaje': 'Guía eliminada correctamente'}), 200
+@token_required
+def eliminar_guia(current_user, id_):
+    try:
+        GuiaService.eliminar_guia(id_)
+        return jsonify({'mensaje': 'Guía eliminada correctamente'}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

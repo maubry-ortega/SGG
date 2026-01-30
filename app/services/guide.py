@@ -39,7 +39,7 @@ class GuiaService:
         if pdf_file and hasattr(pdf_file, 'filename'):
             uploads_dir = 'app/uploads'
             os.makedirs(uploads_dir, exist_ok=True) 
-            filename = pdf_file.filename
+            filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{pdf_file.filename}"
             pdf_path = os.path.join(uploads_dir, filename)
             pdf_file.save(pdf_path)
             return filename
@@ -49,31 +49,27 @@ class GuiaService:
     def validarDatos(data, archivo):
         if not archivo or not hasattr(archivo, 'filename') or archivo.filename == '':
             return {"error": "No se anexó ningún PDF."}
-        if not data.get('nombre'):
-            return {"error": "El nombre es obligatorio."}
-        if not data.get('descripcion'):
-            return {"error": "La descripción es obligatoria."}
-        if not data.get('programa'):
-            return {"error": "El programa es obligatorio."}
+        if not data.get('full_name'):
+            return {"error": "El nombre (full_name) es obligatorio."}
+        if not data.get('description'):
+            return {"error": "La descripción (description) es obligatoria."}
+        if not data.get('program'):
+            return {"error": "El programa (program) es obligatorio."}
         return True
 
     @staticmethod
-    def dict_Guide(data):
-        fecha_str = data.get("fecha")
+    def dict_Guide(data, instructor):
+        fecha_str = data.get("date") # Cambiado de fecha a date
         fecha = datetime.strptime(fecha_str, '%Y-%m-%d') if fecha_str else datetime.now()
 
-        instructor_id = session.get("instructor_id")
-        if not instructor_id:
-            raise ValueError("Instructor no autenticado.")
-
-        instructor = Instructor.objects.get(id=instructor_id)
-        programa = ProgramaFormacion.objects.get(id=data.get("programa"))
+        programa = ProgramaFormacion.objects.get(id=data.get("program"))
 
         return {
-            "full_name": data.get("nombre"),
-            "description": data.get("descripcion"),
+            "full_name": data.get("full_name"),
+            "description": data.get("description"),
             "date": fecha,
             "program": programa,
             "pdf_file": f'app/uploads/{data.get("archivo")}',
             "instructor": instructor
         }
+

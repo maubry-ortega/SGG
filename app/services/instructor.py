@@ -32,16 +32,17 @@ class InstructorService:
         except Region.DoesNotExist:
             raise ValueError("La región especificada no existe.")
 
-        # 1. Generar contraseña aleatoria
-        password_generada = InstructorService._generar_password()
+        # 1. Usar contraseña proporcionada o generar una aleatoria
+        password_generada = data.get("password") or InstructorService._generar_password()
         print("json de creacion")
         datos_creacion = {
             "full_name": data["full_name"],
             "email": data["email"],
             "region": region,
             "username": data["username"],
-            "password": password_generada  # 2. Asignar la contraseña generada
+            "password": password_generada
         }
+
         print("try para crear instructor")
         try:
             # 3. Crear instructor en la base de datos
