@@ -1,17 +1,16 @@
-# SGG - Sistema Gestor de Guías
+# SGG - Sistema Gestor de Guías (API REST)
 
-SGG (Sistema Gestor de Guías) es una aplicación web desarrollada en Python con Flask y MongoDB, diseñada para la gestión eficiente de guías de aprendizaje, instructores, programas de formación y regiones. El sistema permite registrar, consultar y administrar guías en formato PDF, asociadas a instructores y programas, facilitando la organización y acceso a los materiales educativos.
+SGG (Sistema Gestor de Guías) ha sido transformado en una **API REST pura** diseñada para ser consumida por frontends modernos (como React). Este sistema permite la gestión eficiente de guías de aprendizaje, instructores, programas de formación y regiones de manera segura y escalable.
 
 ## Características principales
 
-- **Gestión de Guías de Aprendizaje**: Registro, listado, búsqueda, actualización y eliminación de guías en PDF.
-- **Gestión de Instructores**: Registro de instructores con autenticación, asignación de región y generación automática de credenciales.
-- **Gestión de Programas de Formación**: Alta, consulta, edición y eliminación de programas.
-- **Gestión de Regiones**: Administración de regiones para segmentar instructores y programas.
-- **Panel web moderno**: Interfaz responsiva y amigable, con tablas dinámicas, paginación y búsqueda en tiempo real.
-- **Carga y descarga de archivos PDF**: Almacenamiento seguro de materiales de apoyo.
-- **Notificaciones por correo**: Envío automático de credenciales a instructores registrados.
-- **API RESTful**: Endpoints para integración y automatización de procesos.
+- **API RESTful Pura**: Todas las respuestas son en formato JSON estándar.
+- **Autenticación JWT**: Seguridad sin estado mediante JSON Web Tokens para proteger los recursos.
+- **Gestión de Guías**: Registro (con carga de PDF), listado, búsqueda, actualización y eliminación.
+- **Gestión de Instructores**: Registro con validaciones, generación de contraseñas y envío de credenciales por email.
+- **Gestión de Recursos**: CRUD completo para Programas de Formación y Regiones.
+- **CORS Habilitado**: Configurado para permitir peticiones desde entornos de desarrollo frontend (localhost:3000).
+- **Suite de Pruebas**: Cobertura automatizada con Pytest para asegurar la integridad de la API.
 
 ## Estructura del proyecto
 
@@ -19,71 +18,83 @@ SGG (Sistema Gestor de Guías) es una aplicación web desarrollada en Python con
 SGG/
 ├── main.py                  # Punto de entrada de la aplicación Flask
 ├── requirements.txt         # Dependencias del proyecto
+├── .env                     # Configuración de variables de entorno
 ├── app/
-│   ├── __init__.py         # Inicialización y configuración de la app
-│   ├── models/             # Modelos de datos (MongoEngine)
-│   ├── repositories/       # Acceso a datos y lógica de persistencia
+│   ├── __init__.py         # Inicialización de Flask, MongoDB y Blueprints
+│   ├── models/             # Modelos de MongoEngine
+│   ├── repositories/       # Capa de persistencia (Abstracción de DB)
 │   ├── services/           # Lógica de negocio
-│   ├── routes/             # Rutas y controladores (API y vistas)
-│   ├── static/             # Archivos estáticos (CSS, JS, iconos)
-│   ├── templates/          # Plantillas HTML (Jinja2)
-│   ├── utils/              # Utilidades (envío de emails, helpers)
-│   └── uploads/            # Archivos PDF subidos
+│   ├── routes/             # Controladores de la API (Endpoints)
+│   ├── utils/              # JWT Security, Handlers de Email
+│   └── uploads/            # Almacenamiento de PDFs
+├── tests/                   # Suite de pruebas automatizadas
+│   ├── conftest.py         # Configuración y Fixtures de Pytest
+│   ├── test_auth.py        # Pruebas de autenticación
+│   ├── test_resources.py   # Pruebas de programas/regiones
+│   ├── test_guides.py      # Pruebas de guías y archivos
+│   └── test_e2e.py         # Flujos completos de integración
 ```
 
 ## Instalación y ejecución
 
 1. **Clonar el repositorio**
-   ```sh
+   ```bash
    git clone https://github.com/maubry-ortega/SGG
    cd SGG
    ```
-2. **Crear y activar un entorno virtual (opcional pero recomendado)**
-   ```sh
+2. **Entorno Virtual**
+   ```bash
    python3 -m venv venv
    source venv/bin/activate
    ```
 3. **Instalar dependencias**
-   ```sh
+   ```bash
    pip install -r requirements.txt
    ```
-4. **Configurar variables de entorno**
-   Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+4. **Variables de Entorno (.env)**
    ```env
-   SECRET_KEY=tu_clave_secreta
-   MONGODB_URI=mongodb://localhost:27017/sgg_db
+   SECRET_KEY=tu_clave_secreta_jwt
+   MONGODB_URI=mongodb+srv://... (Tu conexión de Atlas)
    MONGODB_DB=sgg_db
    EMAIL_USER=tu_correo@gmail.com
-   EMAIL_PASSWORD=tu_contraseña
+   EMAIL_PASSWORD=tu_app_password
    ```
-5. **Ejecutar la aplicación**
-   ```sh
+5. **Ejecutar**
+   ```bash
    python main.py
    ```
-   La aplicación estará disponible en [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-## Endpoints principales
+## Pruebas Automatizadas
 
-- `/api/guias/` - Listado y gestión de guías de aprendizaje
-- `/api/instructores/` - Gestión de instructores
-- `/api/programas/` - Gestión de programas de formación
-- `/api/regiones/` - Gestión de regiones
-- `/login` y `/registro` - Autenticación y registro de instructores
-- `/guias/` - Vista web de guías
+Para ejecutar las pruebas y verificar que todo funciona correctamente:
 
-## Tecnologías utilizadas
+```bash
+export PYTHONPATH=$PYTHONPATH:.
+./venv/bin/python3 -m pytest -v tests/
+```
+*Las pruebas limpian automáticamente la base de datos de tests (`sgg_test_db`) al iniciar.*
 
-- **Backend**: Python, Flask, Flask-CORS, Flask-Mail, Flask-WTF, MongoEngine, PyMongo
-- **Frontend**: HTML5, CSS3, JavaScript (vanilla), Jinja2
-- **Base de datos**: MongoDB
-- **Otros**: Dotenv, Yagmail (envío de emails), Gunicorn (despliegue)
+## Endpoints de la API
 
-## Licencia
+| Método | Endpoint | Descripción | Protegido |
+| :--- | :--- | :--- | :--- |
+| POST | `/api/auth/login` | Login y obtención de JWT | No |
+| GET | `/api/auth/me` | Obtener info del instructor actual | Sí |
+| GET | `/api/guias/` | Listar todas las guías | No |
+| POST | `/api/guias/` | Crear guía (Multipart/FormData) | Sí |
+| POST | `/api/instructores/` | Registrar nuevo instructor | No |
+| GET | `/api/regiones/` | Listar regiones | No |
+| POST | `/api/programas/` | Crear programa | Sí |
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+## Tecnologías
+
+- **Lenguaje**: Python 3.13+
+- **Framework**: Flask
+- **Autenticación**: PyJWT
+- **Base de Datos**: MongoDB Atlas (MongoEngine)
+- **Pruebas**: Pytest
+- **Email**: Yagmail
 
 ---
+**SGG API v2.0 - Desenvolvido por maubry-ortega**
 
-**Desarrollado por maubry-ortega**
-
-Para dudas, sugerencias o contribuciones, abre un issue o contacta al autor.
