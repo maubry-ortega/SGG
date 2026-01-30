@@ -24,6 +24,9 @@
             <label for="region" class="form-label">Regional</label>
             <select class="form-select" id="region" name="region" required>
                 <option value="">Seleccione una región...</option>
+                {% for regional in regionales %}
+                <option value="{{ regional.id }}">{{ regional.name }}</option>
+                {% endfor %}
             </select>
             <div class="invalid-feedback">Seleccione una región.</div>
         </div>

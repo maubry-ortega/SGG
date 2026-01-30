@@ -13,7 +13,7 @@ from .routes.program import programa_bp
 from .routes.guide import guia_bp
 from .routes.region import region_bp
 from .routes.auth import auth_bp
-from .routes.guia_list import guide_list_bp  # CAMBIADO A NOMBRE EN INGLÉS
+from .routes.guia_list import guide_list_bp
 
 def create_app():
     app = Flask(__name__)
@@ -37,6 +37,6 @@ def create_app():
     app.register_blueprint(guia_bp)
     app.register_blueprint(region_bp)
     app.register_blueprint(auth_bp)
-    app.register_blueprint(guide_list_bp)  # CAMBIADO A NUEVO NOMBRE
+    app.register_blueprint(guide_list_bp)
 
     return app

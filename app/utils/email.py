@@ -27,4 +27,13 @@ Recuerda cambiar tu contraseña después de ingresar.
 Saludos,  
 Equipo SGG
 """
-    yag.send(to=email, subject=asunto, contents=cuerpo)
+    try:
+        yag.send(to=email, subject=asunto, contents=cuerpo)
+        print(f"✅ Email enviado con éxito a {email}")
+    except Exception as e:
+        print(f"❌ Error al enviar email a {email}: {str(e)}")
+        print(f"⚠️  Credenciales que fallaron:")
+        print(f"   Usuario: {username}")
+        print(f"   Password: {password}")
+        # No re-lanzamos la excepción para que el registro del instructor no falle
+

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app.repositories.instructor import InstructorRepository
 from app.repositories.program import ProgramaRepository
+from app.repositories.region import RegionRepository
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -23,7 +24,8 @@ def login():
 
 @auth_bp.route("/registro")
 def registro():
-    return render_template("registro.html")
+    regionales = RegionRepository.obtener_todas()
+    return render_template("registro.html", regionales=regionales)
 
 @auth_bp.route("/formulario-guia")
 def formulario_guia():
