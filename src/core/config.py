@@ -25,12 +25,17 @@ class Settings(BaseSettings):
     EMAIL_USER: Optional[str] = None
     EMAIL_PASSWORD: Optional[str] = None
 
+    # Supabase Storage
+    SUPABASE_URL: Optional[str] = None
+    SUPABASE_KEY: Optional[str] = None
+
     model_config = SettingsConfigDict(
         env_file=".env", 
         case_sensitive=True, 
         extra="ignore", # Allow undefined env vars
         env_file_encoding='utf-8'
     )
+
 
 
 

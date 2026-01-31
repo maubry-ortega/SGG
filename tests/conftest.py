@@ -13,25 +13,34 @@ from src.core.config import settings
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def db_session():
     # Create tables in the test DB
     Base.metadata.create_all(bind=engine)
     
-    # Clean SQL tables before session
+    # Clean SQL tables before session using TRUNCATE CASCADE
     from sqlalchemy import text
     db = TestingSessionLocal()
     try:
-        # Use a list of tables to truncate (order matters if FK exist)
-        # For simplicity, we drop and recreate if using a dedicated test schema
-        Base.metadata.drop_all(bind=engine)
-        Base.metadata.create_all(bind=engine)
+        # Rollback any pending transactions first
+        db.rollback()
+        
+        # Postgres-specific: TRUNCATE with CASCADE usually handles FKs better than DELETE order
+        # Explicitly truncate core tables to ensure safety
+        tables = ["audit_logs", "users", "programs", "regions"]
+        for table in tables:
+            try:
+                db.execute(text(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE"))
+            except Exception:
+                pass 
+        db.commit()
         yield db
     finally:
         db.close()
 
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="function")
 async def client(db_session):
     from httpx import AsyncClient, ASGITransport
     # Override get_db dependency to use the test session
@@ -45,9 +54,6 @@ async def client(db_session):
     async with AsyncClient(transport=ASGITransport(app=main_app), base_url="http://test") as c:
         yield c
     main_app.dependency_overrides.clear()
-
-
-
 
 @pytest.fixture(scope="function", autouse=True)
 async def init_test_mongodb():
@@ -75,7 +81,6 @@ async def init_test_mongodb():
     # Explicit close to avoid pending task errors
     client.close()
 
-
 @pytest.fixture
 async def auth_header(client):
     """Fixture to get a valid JWT header for a test user."""
@@ -100,4 +105,3 @@ async def auth_header(client):
     })
     token = login_res.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
-

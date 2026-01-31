@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, Integer, String, Enum, ForeignKey, DateTime
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql import func
-from src.core.database import Base
 import enum
+from datetime import datetime, timezone
+
+Base = declarative_base()
 
 class UserRole(str, enum.Enum):
     ADMIN = "admin"
@@ -37,10 +39,11 @@ class User(Base):
     region_id = Column(Integer, ForeignKey("regions.id"), nullable=True)
     is_active = Column(Boolean, default=True)
     reputation = Column(Integer, default=0)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), onupdate=lambda: datetime.now(timezone.utc))
 
     region = relationship("Region", back_populates="users")
+
     # Audit trail for the "Brain"
     audit_logs = relationship("AuditLog", back_populates="user")
 
