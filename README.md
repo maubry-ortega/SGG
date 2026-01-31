@@ -1,100 +1,83 @@
-# SGG - Sistema Gestor de Guías (API REST)
+# SGG — Smart Guide Grid (Saggi)
 
-SGG (Sistema Gestor de Guías) ha sido transformado en una **API REST pura** diseñada para ser consumida por frontends modernos (como React). Este sistema permite la gestión eficiente de guías de aprendizaje, instructores, programas de formación y regiones de manera segura y escalable.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Neon](https://img.shields.io/badge/Neon-PostgreSQL-31L8CE?style=for-the-badge&logo=postgresql)](https://neon.tech/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
 
-## Características principales
+**SGG (Smart Guide Grid)** es un motor backend modular de alto rendimiento diseñado para gobernar procesos administrativos y de aprendizaje. La plataforma expuesta a la comunidad se conoce como **Saggi**.
 
-- **API RESTful Pura**: Todas las respuestas son en formato JSON estándar.
-- **Autenticación JWT**: Seguridad sin estado mediante JSON Web Tokens para proteger los recursos.
-- **Gestión de Guías**: Registro (con carga de PDF), listado, búsqueda, actualización y eliminación.
-- **Gestión de Instructores**: Registro con validaciones, generación de contraseñas y envío de credenciales por email.
-- **Gestión de Recursos**: CRUD completo para Programas de Formación y Regiones.
-- **CORS Habilitado**: Configurado para permitir peticiones desde entornos de desarrollo frontend (localhost:3000).
-- **Suite de Pruebas**: Cobertura automatizada con Pytest para asegurar la integridad de la API.
+> "Construye conocimiento con sistema, no con caos."
 
-## Estructura del proyecto
+## 🐙 Pulpo Ingeniero SGG
+La mascota representa inteligencia multitarea, coordinación distribuida y ejecución paralela. Un solo cerebro (SGG Core), muchos brazos (Servicios Modulares).
 
+## 🚀 Características Clave
+- **Un Cerebro, Dos Caras**: Branding dinámico para Comunidad (Saggi) vs Corporativo (SGG).
+- **Persistencia Híbrida**: Neon PostgreSQL (Gobernanza) + MongoDB Atlas (Grid de Recursos de Aprendizaje).
+- **RBAC y Seguridad**: Tokens JWT de Acceso/Refresco con control de acceso estricto basado en roles.
+- **FastAPI Core**: Nativo asíncrono, tipado seguro y auto-documentado.
+
+## 📁 Estructura del Repositorio
 ```
-SGG/
-├── main.py                  # Punto de entrada de la aplicación Flask
-├── requirements.txt         # Dependencias del proyecto
-├── .env                     # Configuración de variables de entorno
-├── app/
-│   ├── __init__.py         # Inicialización de Flask, MongoDB y Blueprints
-│   ├── models/             # Modelos de MongoEngine
-│   ├── repositories/       # Capa de persistencia (Abstracción de DB)
-│   ├── services/           # Lógica de negocio
-│   ├── routes/             # Controladores de la API (Endpoints)
-│   ├── utils/              # JWT Security, Handlers de Email
-│   └── uploads/            # Almacenamiento de PDFs
-├── tests/                   # Suite de pruebas automatizadas
-│   ├── conftest.py         # Configuración y Fixtures de Pytest
-│   ├── test_auth.py        # Pruebas de autenticación
-│   ├── test_resources.py   # Pruebas de programas/regiones
-│   ├── test_guides.py      # Pruebas de guías y archivos
-│   └── test_e2e.py         # Flujos completos de integración
+src/
+├── api/v1/         # Endpoints versionados
+├── core/           # Configuración, BD, lógica de seguridad
+├── modules/        # Lógica de dominio (Auth, Learning, Gov, Branding)
+├── shared/         # Modelos, utilidades y esquemas
+└── main.py         # Punto de entrada
 ```
 
-## Instalación y ejecución
+## 🛠️ Configuración y Ejecución
 
-1. **Clonar el repositorio**
-   ```bash
-   git clone https://github.com/maubry-ortega/SGG
-   cd SGG
-   ```
-2. **Entorno Virtual**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-3. **Instalar dependencias**
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. **Variables de Entorno (.env)**
-   ```env
-   SECRET_KEY=tu_clave_secreta_jwt
-   MONGODB_URI=mongodb+srv://... (Tu conexión de Atlas)
-   MONGODB_DB=sgg_db
-   EMAIL_USER=tu_correo@gmail.com
-   EMAIL_PASSWORD=tu_app_password
-   ```
-5. **Ejecutar**
-   ```bash
-   python main.py
-   ```
+### 1. Requisitos
+- Python 3.13+
+- Archivo `.env` con credenciales de Neon y MongoDB.
 
-## Pruebas Automatizadas
-
-Para ejecutar las pruebas y verificar que todo funciona correctamente:
-
+### 2. Instalación
 ```bash
-export PYTHONPATH=$PYTHONPATH:.
-./venv/bin/python3 -m pytest -v tests/
+./venv/bin/pip install -r requirements.txt
 ```
-*Las pruebas limpian automáticamente la base de datos de tests (`sgg_test_db`) al iniciar.*
 
-## Endpoints de la API
+### 3. Ejecutar Servidor de Desarrollo
+```bash
+./venv/bin/python3 -m uvicorn src.main:app --reload
+```
+El servidor iniciará en `http://localhost:8000`.
 
-| Método | Endpoint | Descripción | Protegido |
-| :--- | :--- | :--- | :--- |
-| POST | `/api/auth/login` | Login y obtención de JWT | No |
-| GET | `/api/auth/me` | Obtener info del instructor actual | Sí |
-| GET | `/api/guias/` | Listar todas las guías | No |
-| POST | `/api/guias/` | Crear guía (Multipart/FormData) | Sí |
-| POST | `/api/instructores/` | Registrar nuevo instructor | No |
-| GET | `/api/regiones/` | Listar regiones | No |
-| POST | `/api/programas/` | Crear programa | Sí |
+## 🧪 Pruebas
+El sistema utiliza `pytest` con aislamiento de entorno.
+```bash
+./venv/bin/python3 -m pytest -v
+```
+*Nota: Las pruebas limpian automáticamente las tablas de prueba en Neon y MongoDB.*
 
-## Tecnologías
+## ⚛️ Integración con React
+SGG está diseñado para ser consumido fácilmente por clientes modernos como React.
 
-- **Lenguaje**: Python 3.13+
-- **Framework**: Flask
-- **Autenticación**: PyJWT
-- **Base de Datos**: MongoDB Atlas (MongoEngine)
-- **Pruebas**: Pytest
-- **Email**: Yagmail
+### Configuración CORS
+La API ya está configurada para aceptar peticiones de cualquier origen en desarrollo (`allow_origins=["*"]`).
+
+### Ejemplo de Consumo (Hooks)
+```javascript
+// Auth: Login y obtención de tokens
+const login = async (username, password) => {
+  const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  const data = await response.json();
+  // Guardar data.access_token y data.refresh_token
+};
+
+// Learning: Obtener recursos (Grid)
+const getResources = async (token) => {
+  const response = await fetch('http://localhost:8000/api/v1/learning/', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  return await response.json();
+};
+```
 
 ---
-**SGG API v2.0 - Desenvolvido por maubry-ortega**
-
+**SGG Core Engine - Modular, Escalable, Inteligente.**

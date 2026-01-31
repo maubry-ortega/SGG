@@ -49,7 +49,7 @@ async def client(db_session):
 
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 async def init_test_mongodb():
     """Initializes MongoDB for testing using the DB name from environment."""
     from motor.motor_asyncio import AsyncIOMotorClient
@@ -72,8 +72,6 @@ async def init_test_mongodb():
         ]
     )
     yield
-    # Explicit close to avoid pending task errors
-    client.close()
 
 
 @pytest.fixture
