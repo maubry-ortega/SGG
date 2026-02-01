@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta, timezone
+import random
+import string
 from typing import Any, Union
 from jose import jwt
 import bcrypt
@@ -17,6 +19,13 @@ def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password_bytes, salt)
     return hashed.decode('utf-8')
+
+def generate_memorable_password() -> str:
+    """Generates a simple, memorable password like Saggi-2026-XP."""
+    capital_word = "Saggi"
+    year = datetime.now().year
+    random_suffix = ''.join(random.choices(string.ascii_uppercase, k=2))
+    return f"{capital_word}-{year}-{random_suffix}"
 
 def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
     if expires_delta:

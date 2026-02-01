@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --color-midnight: #0a0b1e;
+
+  /* Community Theme Defaults */
+  --color-saggi-primary: var(--primary-color, #3b82f6);
+  --color-saggi-secondary: var(--secondary-color, #8b5cf6);
+  --color-saggi-accent: var(--accent-color, #f97316);
+
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+}
+
+:root {
+  /* Community Theme (Light/Assistance) */
+  --theme-name: 'community';
+  --primary-color: #3b82f6;
+  /* Medium Blue */
+  --secondary-color: #06b6d4;
+  /* Cyan */
+  --accent-color: #fb923c;
+  /* Soft Orange */
+  --bg-dots: radial-gradient(rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+}
+
+.theme-corporate {
+  /* Corporate Theme (Serious/Robust) */
+  --theme-name: 'corporate';
+  --primary-color: #1e3a8a;
+  /* Dark Blue */
+  --secondary-color: #0d9488;
+  /* Petrol Blue */
+  --accent-color: #f97316;
+  /* Neon Orange */
+  --bg-dots: radial-gradient(rgba(249, 115, 22, 0.1) 1px, transparent 1px);
+}
+
+@layer base {
+  body {
+    @apply bg-midnight text-white font-inter antialiased min-h-screen transition-colors duration-500;
+    background-size: 40px 40px;
+    background-image:
+      var(--bg-dots),
+      radial-gradient(circle at 10% 20%, var(--primary-color) 0%, transparent 40%);
+    background-blend-mode: overlay;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-[2.5rem] p-8 transition-all duration-300 hover:border-white/20;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] px-8 py-4 rounded-2xl font-black text-white uppercase tracking-wider shadow-lg shadow-[var(--primary-color)]/20 hover:shadow-[var(--primary-color)]/40 transform hover:-translate-y-1 transition-all active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-[var(--primary-color)]/30 px-8 py-4 rounded-2xl font-bold text-white hover:bg-[var(--primary-color)]/10 transition-all;
+  }
+
+  .input-field {
+    @apply w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10 transition-all;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.mascot-container {
+  @apply relative w-full h-full flex items-center justify-center;
+}
+
+.mascot-glow {
+  @apply absolute w-full h-full rounded-full blur-[100px] opacity-20 -z-10 bg-[var(--primary-color)];
+}

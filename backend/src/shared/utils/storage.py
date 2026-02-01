@@ -6,14 +6,23 @@ import uuid
 
 class StorageService:
     def __init__(self):
-        if not settings.SUPABASE_URL or not settings.SUPABASE_KEY:
+        # Check if Supabase credentials are properly configured
+        if not settings.SUPABASE_URL or not settings.SUPABASE_KEY or \
+           settings.SUPABASE_URL == "None" or settings.SUPABASE_KEY == "None":
              # In production, this should probably raise an error or warn. 
              # For development, we allow pass but methods will fail.
              self.client = None
+             print("⚠️  Supabase credentials not configured - storage features disabled")
              return
 
-        self.client: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
-        self.bucket_name = "saggi-resources"
+        try:
+            self.client: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            self.bucket_name = "saggi-resources"
+            print("✓ Supabase storage service initialized")
+        except Exception as e:
+            print(f"⚠️  Failed to initialize Supabase client: {e}")
+            print("   Storage features will be disabled")
+            self.client = None
 
     async def upload_file(self, file: UploadFile, path_prefix: str = "pdfs") -> str:
         """
