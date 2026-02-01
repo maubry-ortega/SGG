@@ -1,12 +1,18 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.core.config import settings
 from src.core.database import init_beanie_db
 from src.api.v1.router import api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Create SQL Tables (Neon)
+    from src.shared.models.user import Base
+    from src.core.database import engine
+    Base.metadata.create_all(bind=engine)
+    
     # Initialize Beanie (MongoDB)
     await init_beanie_db()
     yield
@@ -38,6 +44,9 @@ def create_app() -> FastAPI:
 
     # Include API Routers
     app.include_router(api_router, prefix=settings.API_V1_STR)
+
+    # Static Files for Uploads
+    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
     @app.get("/", tags=["Health"])
     def root():

@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, BookOpen, Users, Settings, LogOut, Shield, Zap, TrendingUp, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { BookOpen, Info, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import Sidebar from '../components/Sidebar';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [isCorporate, setIsCorporate] = useState(false);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [user, setUser] = useState({ username: 'Invitado', role: 'usuario' });
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        } else {
+            navigate('/login');
+        }
+    }, [navigate]);
 
     const toggleTheme = () => {
         const newMode = !isCorporate;
@@ -23,53 +35,15 @@ const Dashboard = () => {
     };
 
     const stats = [
-        { label: "Guías Completadas", value: "12", icon: <BookOpen size={20} />, onClick: () => handleSoon("Guías") },
-        { label: "Recursos Guardados", value: "45", icon: <Info size={20} />, onClick: () => handleSoon("Recursos") },
-        { label: "Puntos Saggi", value: "1,250", icon: <Zap size={20} />, accent: true, onClick: () => handleSoon("Puntos") },
+        { label: "Global Guías Completadas", value: user.completed_guides_count || 0, icon: <BookOpen size={20} />, onClick: () => handleSoon("Guías") },
+        { label: "Global Recursos Guardados", value: user.saved_resources_count || 0, icon: <Info size={20} />, onClick: () => handleSoon("Recursos") },
+        { label: "Global Saggi Points", value: user.points?.toLocaleString() || 0, icon: <Zap size={20} />, accent: true, onClick: () => toast.info("¡Gana puntos compartiendo recursos!") },
     ];
 
     return (
         <div className={`flex min-h-screen ${isCorporate ? 'theme-corporate bg-[#0a0f1e]' : 'bg-midnight'} transition-colors duration-700`}>
-            {/* Sidebar */}
-            <aside className="w-80 glass border-r border-white/5 flex flex-col p-8 z-20">
-                <div className="flex items-center gap-4 mb-16">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors ${isCorporate ? 'bg-energy-orange shadow-energy-orange/20' : 'bg-cyber-blue shadow-cyber-blue/20'}`}>
-                        <Shield size={24} className="text-white" />
-                    </div>
-                    <div>
-                        <span className="font-black text-2xl tracking-tighter block leading-none">SAGGI</span>
-                        <span className={`text-[10px] font-bold uppercase tracking-[0.3em] ${isCorporate ? 'text-energy-orange' : 'text-cyan-400'}`}>
-                            {isCorporate ? 'Corporate Engine' : 'Community Shell'}
-                        </span>
-                    </div>
-                </div>
-
-                <nav className="flex-1 space-y-3">
-                    <NavItem icon={<LayoutDashboard size={22} />} label="Dashboard" active onClick={() => toast.success("Ya estás en el Dashboard")} />
-                    <NavItem icon={<BookOpen size={22} />} label="Recursos" onClick={() => handleSoon("Recursos Explorer")} />
-                    <NavItem icon={<Users size={22} />} label="Comunidad" onClick={() => handleSoon("Social Hub")} />
-                    <NavItem icon={<TrendingUp size={22} />} label="Analíticas" onClick={() => handleSoon("Advanced Analytics")} />
-                </nav>
-
-                <div className="mt-auto space-y-4 pt-8 border-t border-white/5">
-                    {/* Theme Toggle Button - For Demo purposes */}
-                    <button
-                        onClick={toggleTheme}
-                        className="w-full flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/10 text-sm font-bold"
-                    >
-                        <div className={`w-3 h-3 rounded-full ${isCorporate ? 'bg-cyan-400' : 'bg-energy-orange'}`}></div>
-                        Ver Modo {isCorporate ? 'Comunidad' : 'Corporativo'}
-                    </button>
-
-                    <NavItem icon={<Settings size={22} />} label="Configuración" onClick={() => handleSoon("Ajustes de Perfil")} />
-                    <div
-                        onClick={() => navigate('/')}
-                        className="p-4 rounded-2xl flex items-center gap-4 text-red-400 hover:bg-red-500/10 transition-all cursor-pointer font-bold"
-                    >
-                        <LogOut size={22} /> <span>Cerrar Sesión</span>
-                    </div>
-                </div>
-            </aside>
+            {/* Sidebar Component */}
+            <Sidebar isCorporate={isCorporate} toggleTheme={toggleTheme} />
 
             {/* Main Content */}
             <main className="flex-1 p-12 overflow-y-auto relative">
@@ -92,12 +66,14 @@ const Dashboard = () => {
                         >
                             Panel de {isCorporate ? 'Gestión' : 'Estudio'}
                         </motion.h1>
-                        <p className="text-slate-400 text-lg font-medium">Bienvenido de vuelta, <span className="text-white">Maubry</span>.</p>
+                        <p className="text-slate-400 text-lg font-medium tracking-tight">
+                            Bienvenido de vuelta, <span className="text-white capitalize font-black">{user.username}</span>.
+                        </p>
                     </div>
 
                     <div className="flex items-center gap-6">
                         <div className="text-right hidden sm:block">
-                            <p className="text-xs font-black text-slate-500 uppercase tracking-widest">Nivel 4</p>
+                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">{user.role}</p>
                             <p className="font-bold text-gradient">Saggi Expert</p>
                         </div>
                         <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center border-white/20 shadow-xl overflow-hidden">
@@ -129,50 +105,47 @@ const Dashboard = () => {
                     ))}
                 </section>
 
-                {/* Featured Card */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 relative z-10">
-                    <div className="glass-card overflow-hidden relative">
-                        <div className={`absolute top-0 right-0 w-32 h-32 blur-[80px] -z-10 ${isCorporate ? 'bg-energy-orange/40' : 'bg-cyber-blue/40'}`}></div>
-                        <h3 className="text-2xl font-black mb-6">Próxima Actividad</h3>
-                        <div className="flex items-center gap-6 p-6 glass border-white/5 rounded-[2rem] mb-6">
-                            <div className="w-20 h-20 glass rounded-2xl flex items-center justify-center text-cyber-blue">
-                                <BookOpen size={32} />
-                            </div>
-                            <div>
-                                <h4 className="font-black text-xl">Arquitectura de Datos</h4>
-                                <p className="text-slate-400 text-sm">Módulo 4: Redes Neuronales</p>
-                            </div>
-                        </div>
-                        <button onClick={() => handleSoon("Curso de Arquitectura")} className="btn-primary w-full">Continuar Aprendizaje</button>
+                {/* Rewards System Info Box */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-16 p-8 glass border-cyan-400/20 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-8 relative z-10 overflow-hidden group"
+                >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-400/5 blur-[80px] rounded-full group-hover:bg-cyan-400/10 transition-colors"></div>
+                    <div className="w-20 h-20 bg-cyan-400/10 rounded-3xl flex items-center justify-center text-cyan-400 shrink-0 shadow-lg shadow-cyan-400/10">
+                        <Zap size={40} className="animate-pulse" />
                     </div>
+                    <div className="flex-1 text-center md:text-left">
+                        <h4 className="text-xl font-black mb-2 tracking-tight">Ecosistema de Recompensas</h4>
+                        <p className="text-slate-400 font-medium leading-relaxed max-w-2xl">
+                            ¿Sabías que puedes ganar <span className="text-cyan-400 font-bold">50 Saggi Points</span> por cada PDF que subas?
+                            Una vez que un administrador valide tu aporte, los puntos se sumarán a tu perfil global.
+                            ¡Pronto podrás canjearlos por insignias y funciones exclusivas!
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => navigate('/resources')}
+                        className="btn-primary py-4 px-10 shrink-0 shadow-cyan-500/20"
+                    >
+                        Subir PDF Ahora
+                    </button>
+                </motion.div>
 
-                    <div className="glass-card flex flex-col justify-center items-center text-center">
-                        <img
-                            src={isCorporate ? "/assets/pulpo_corporativo.png" : "/assets/pulpo_usuarios.png"}
-                            className="w-40 animate-float mb-6"
-                            alt="saggi"
-                        />
-                        <h3 className="text-2xl font-black mb-2">Saggi IA te ayuda</h3>
-                        <p className="text-slate-400 max-w-xs mb-8">Base de datos actualizada. ¿Necesitas ayuda con tu última guía?</p>
-                        <button onClick={() => handleSoon("Asistente Saggi")} className="btn-secondary w-full">Abrir Asistente</button>
+                <div className="glass-card flex flex-col md:flex-row items-center justify-between gap-8 mb-20 relative z-10">
+                    <div className="flex items-center gap-6 text-center md:text-left">
+                        <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center text-cyan-400">
+                            <BookOpen size={32} />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-black mb-1">Navegar por Recursos</h3>
+                            <p className="text-slate-400 max-w-sm">Accede al catálogo completo de guías y PDFs validados por la red.</p>
+                        </div>
                     </div>
+                    <button onClick={() => navigate('/resources')} className="btn-primary py-4 px-10">Explorar Catálogo</button>
                 </div>
             </main>
         </div>
     );
 };
-
-const NavItem = ({ icon, label, active = false, onClick }) => (
-    <div
-        onClick={onClick}
-        className={`
-        p-4 rounded-2xl flex items-center gap-4 cursor-pointer transition-all duration-300 font-bold
-        ${active ? 'bg-white/10 text-white shadow-xl border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white'}
-      `}
-    >
-        {React.cloneElement(icon, { className: active ? 'text-[var(--primary-color)]' : '' })}
-        <span>{label}</span>
-    </div>
-);
 
 export default Dashboard;

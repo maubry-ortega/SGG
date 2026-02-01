@@ -21,6 +21,11 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:8000/api/v1/auth/login', formData);
             console.log('Login successful:', response.data);
+
+            // Store session data
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('access_token', response.data.access_token);
+
             navigate('/dashboard');
         } catch (err) {
             setError('Usuario o contraseña incorrectos');

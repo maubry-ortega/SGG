@@ -38,7 +38,9 @@ class User(Base):
     identity = Column(Enum(UserIdentity), default=UserIdentity.COMMUNITY)
     region_id = Column(Integer, ForeignKey("regions.id"), nullable=True)
     is_active = Column(Boolean, default=True)
-    reputation = Column(Integer, default=0)
+    points = Column(Integer, default=0)
+    completed_guides_count = Column(Integer, default=0)
+    saved_resources_count = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), onupdate=lambda: datetime.now(timezone.utc))
 

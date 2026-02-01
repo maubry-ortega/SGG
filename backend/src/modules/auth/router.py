@@ -21,5 +21,12 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         "access_token": create_access_token(user.id),
         "refresh_token": create_refresh_token(user.id),
         "token_type": "bearer",
-        "user": {"id": user.id, "username": user.username, "role": user.role}
+        "user": {
+            "id": user.id, 
+            "username": user.username, 
+            "role": user.role,
+            "points": user.points,
+            "completed_guides_count": user.completed_guides_count,
+            "saved_resources_count": user.saved_resources_count
+        }
     }

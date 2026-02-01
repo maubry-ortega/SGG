@@ -17,13 +17,14 @@ class InteractionMetrics(BaseModel):
 class SaggiResource(Document):
     title: Indexed(str)
     description: str
-    instructor_id: int  # Linked to SQL User ID
+    instructor_id: int
     tags: List[str] = []
     level: ResourceLevel = ResourceLevel.BASIC
     file_url: str
-    is_public: bool = True
-    metrics: InteractionMetrics = Field(default_factory=InteractionMetrics)
-    version: int = 1
+    uploader_id: int = 0  # To link with SQL User
+    is_approved: bool = False
+    uploaded_by: Optional[int] = None
+    approved_by: Optional[int] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
