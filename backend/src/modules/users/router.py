@@ -51,3 +51,17 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db)):
     )
     
     return db_user
+@router.get("/leaderboard")
+def get_leaderboard(limit: int = 10, db: Session = Depends(get_db)):
+    users = db.query(User).order_by(User.points.desc()).limit(limit).all()
+    # Mask hashed passwords in response for security
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "full_name": u.full_name,
+            "points": u.points,
+            "role": u.role
+        }
+        for u in users
+    ]

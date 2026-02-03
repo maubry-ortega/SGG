@@ -47,8 +47,8 @@ const Sidebar = ({ isCorporate, toggleTheme }) => {
             <nav className="flex-1 space-y-3">
                 <NavItem icon={<LayoutDashboard size={22} />} label="Dashboard" path="/dashboard" />
                 <NavItem icon={<BookOpen size={22} />} label="Recursos" path="/resources" />
-                <NavItem icon={<Users size={22} />} label="Comunidad" path="/community" onClick={() => toast.info("Comunidad próximamente")} />
-                <NavItem icon={<TrendingUp size={22} />} label="Analíticas" path="/analytics" onClick={() => toast.info("Analíticas próximamente")} />
+                <NavItem icon={<Users size={22} />} label="Comunidad" path="/community" />
+                <NavItem icon={<TrendingUp size={22} />} label="Analíticas" path="/analytics" />
             </nav>
 
             <div className="mt-auto space-y-4 pt-8 border-t border-white/5">

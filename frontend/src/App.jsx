@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard'
 import ResourcesPage from './pages/ResourcesPage'
 import ProfilePage from './pages/ProfilePage'
 import SettingsPage from './pages/SettingsPage'
+import CommunityPage from './pages/CommunityPage'
+import AnalyticsPage from './pages/AnalyticsPage'
 import CommonPage from './pages/CommonPage'
 
 function App() {
@@ -20,8 +22,8 @@ function App() {
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/community" element={<CommonPage title="Comunidad" description="Conecta con otros estudiantes en el ecosistema SGG." />} />
-        <Route path="/analytics" element={<CommonPage title="Analíticas" description="Visualiza tu progreso y estadísticas de aprendizaje avanzadas." />} />
+        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
       </Routes>
     </Router>
   )
