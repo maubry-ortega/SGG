@@ -3,13 +3,12 @@ import { BookOpen, Upload, Shield } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import ResourceUpload from '../components/ResourceUpload';
 import { ResourceExplorer, AdminResourcePanel } from '../components/Resources';
+import useTheme from '../hooks/useTheme';
 
 const ResourcesPage = () => {
-    const [isCorporate, setIsCorporate] = useState(false);
+    const { isCorporate, toggleTheme } = useTheme();
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-    const toggleTheme = () => setIsCorporate(!isCorporate);
 
     return (
         <div className={`flex min-h-screen ${isCorporate ? 'theme-corporate bg-[#0a0f1e]' : 'bg-midnight'} transition-colors duration-700`}>

@@ -31,7 +31,7 @@ const Sidebar = ({ isCorporate, toggleTheme }) => {
     };
 
     return (
-        <aside className="w-80 glass border-r border-white/5 flex flex-col p-8 z-20">
+        <aside className="w-80 h-screen sticky top-0 shrink-0 glass border-r border-white/5 flex flex-col p-8 z-20">
             <div className="flex items-center gap-4 mb-16">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors ${isCorporate ? 'bg-energy-orange shadow-energy-orange/20' : 'bg-cyber-blue shadow-cyber-blue/20'}`}>
                     <Shield size={24} className="text-white" />

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, TrendingUp, Target, Award, Info, Zap, Download, Eye } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import useTheme from '../hooks/useTheme';
 
 const AnalyticsPage = () => {
-    const [isCorporate, setIsCorporate] = useState(false);
+    const { isCorporate, toggleTheme } = useTheme();
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -13,8 +14,6 @@ const AnalyticsPage = () => {
             setUser(JSON.parse(storedUser));
         }
     }, []);
-
-    const toggleTheme = () => setIsCorporate(!isCorporate);
 
     if (!user) return null;
 

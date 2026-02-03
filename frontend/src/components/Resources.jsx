@@ -101,7 +101,7 @@ export const AdminResourcePanel = ({ refreshTrigger, onAction }) => {
                         </div>
                         <div className="flex items-center gap-3">
                             <a
-                                href={`http://localhost:8000/${res.file_url}`}
+                                href={res.file_url.startsWith('http') ? res.file_url : `http://localhost:8000/${res.file_url}`}
                                 target="_blank"
                                 className="p-3 glass rounded-xl text-slate-300 hover:text-white"
                             >
@@ -147,7 +147,7 @@ const ResourceCard = ({ resource }) => (
                 <CheckCircle size={14} className="text-green-500" /> Público
             </div>
             <a
-                href={`http://localhost:8000/${resource.file_url}`}
+                href={resource.file_url.startsWith('http') ? resource.file_url : `http://localhost:8000/${resource.file_url}`}
                 target="_blank"
                 download
                 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-cyber-blue hover:text-white transition-colors"

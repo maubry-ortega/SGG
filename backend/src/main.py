@@ -51,6 +51,8 @@ def create_app() -> FastAPI:
             "http://localhost:5174",
             "http://127.0.0.1:5174",
             "http://localhost:5175",
+            "http://192.168.0.106:5173",
+            "http://192.168.0.106:5174",
         ],  
         allow_credentials=True,
         allow_methods=["*"],
@@ -60,8 +62,6 @@ def create_app() -> FastAPI:
     # Include API Routers
     app.include_router(api_router, prefix=settings.API_V1_STR)
 
-    # Static Files for Uploads
-    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
     @app.get("/", tags=["Health"])
     def root():

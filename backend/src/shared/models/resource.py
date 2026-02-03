@@ -17,7 +17,7 @@ class InteractionMetrics(BaseModel):
 class SaggiResource(Document):
     title: Indexed(str)
     description: str
-    instructor_id: int
+    instructor_id: Optional[int] = None
     tags: List[str] = []
     level: ResourceLevel = ResourceLevel.BASIC
     file_url: str

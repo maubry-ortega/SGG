@@ -10,6 +10,29 @@ from typing import Optional
 
 router = APIRouter()
 
+@router.get("/leaderboard")
+def get_leaderboard(limit: int = 10, db: Session = Depends(get_db)):
+    users = db.query(User).order_by(User.points.desc()).limit(limit).all()
+    # Mask hashed passwords in response for security
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "full_name": u.full_name,
+            "points": u.points,
+            "role": u.role,
+            "email": u.email
+        }
+        for u in users
+    ]
+
+@router.get("/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
 class UserCreate(BaseModel):
     full_name: str
     email: EmailStr
@@ -51,17 +74,22 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db)):
     )
     
     return db_user
-@router.get("/leaderboard")
-def get_leaderboard(limit: int = 10, db: Session = Depends(get_db)):
-    users = db.query(User).order_by(User.points.desc()).limit(limit).all()
-    # Mask hashed passwords in response for security
-    return [
-        {
-            "id": u.id,
-            "username": u.username,
-            "full_name": u.full_name,
-            "points": u.points,
-            "role": u.role
-        }
-        for u in users
-    ]
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+@router.patch("/{user_id}")
+def update_user(user_id: int, user_in: UserUpdate, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    if user_in.full_name:
+        user.full_name = user_in.full_name
+    if user_in.email:
+        user.email = user_in.email
+    
+    db.commit()
+    db.refresh(user)
+    return user

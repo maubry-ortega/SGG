@@ -18,10 +18,12 @@ class StorageService:
         try:
             self.client: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
             self.bucket_name = "saggi-resources"
-            print("✓ Supabase storage service initialized")
+            # Test client with a simple check (optional but helps diagnostics)
+            print(f"✓ Supabase storage service initialized (URL: {settings.SUPABASE_URL})")
         except Exception as e:
             print(f"⚠️  Failed to initialize Supabase client: {e}")
-            print("   Storage features will be disabled")
+            print(f"   Using URL: {settings.SUPABASE_URL}")
+            print(f"   Key starting with: {settings.SUPABASE_KEY[:5] if settings.SUPABASE_KEY else 'None'}...")
             self.client = None
 
     async def upload_file(self, file: UploadFile, path_prefix: str = "pdfs") -> str:

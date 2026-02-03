@@ -30,3 +30,18 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
             "saved_resources_count": user.saved_resources_count
         }
     }
+    
+class ChangePasswordRequest(BaseModel):
+    user_id: int
+    current_password: str
+    new_password: str
+
+@router.post("/change-password")
+def change_password(data: ChangePasswordRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == data.user_id).first()
+    if not user or not verify_password(data.current_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Contraseña actual incorrecta")
+    
+    user.hashed_password = get_password_hash(data.new_password)
+    db.commit()
+    return {"message": "Contraseña actualizada con éxito"}

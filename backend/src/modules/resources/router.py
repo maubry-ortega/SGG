@@ -9,11 +9,9 @@ from sqlalchemy.orm import Session
 from beanie import PydanticObjectId
 from datetime import datetime, timezone
 
-router = APIRouter()
+from src.shared.utils.storage import storage_service
 
-UPLOAD_DIR = "uploads"
-if not os.path.exists(UPLOAD_DIR):
-    os.makedirs(UPLOAD_DIR)
+router = APIRouter()
 
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_pdf(
@@ -27,23 +25,24 @@ async def upload_pdf(
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Solo se permiten archivos PDF.")
 
-    file_path = os.path.join(UPLOAD_DIR, f"{datetime.now().timestamp()}_{file.filename}")
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Upload to Supabase Storage
+    try:
+        file_url = await storage_service.upload_file(file)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al subir a Supabase: {str(e)}")
 
     resource = SaggiResource(
         title=title,
         description=description,
         level=level,
         tags=tags.split(",") if tags else [],
-        file_url=file_path,
+        file_url=file_url,
         uploader_id=uploader_id,
         is_approved=False
     )
     
     await resource.insert()
-    return {"message": "PDF subido con éxito. Pendiente de aprobación por un administrador.", "id": str(resource.id)}
+    return {"message": "PDF subido con éxito a Supabase. Pendiente de aprobación.", "id": str(resource.id), "url": file_url}
 
 @router.get("/", response_model=List[SaggiResource])
 async def get_public_resources():
@@ -79,9 +78,8 @@ async def delete_resource(id: str):
     if not resource:
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
     
-    # Optional: Delete actual file
-    if os.path.exists(resource.file_url):
-        os.remove(resource.file_url)
+    # Optional: Delete from Supabase would go here 
+    # await storage_service.delete_file(resource.file_url)
         
     await resource.delete()
     return {"message": "Recurso eliminado"}

@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 import { Trophy, Users, Activity, Zap, Star, MessageSquare, BookOpen } from 'lucide-react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
+import useTheme from '../hooks/useTheme';
 
 const CommunityPage = () => {
-    const [isCorporate, setIsCorporate] = useState(false);
+    const { isCorporate, toggleTheme } = useTheme();
     const [leaderboard, setLeaderboard] = useState([]);
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,7 +29,6 @@ const CommunityPage = () => {
         fetchData();
     }, []);
 
-    const toggleTheme = () => setIsCorporate(!isCorporate);
 
     return (
         <div className={`flex min-h-screen ${isCorporate ? 'theme-corporate bg-[#0a0f1e]' : 'bg-midnight'} transition-colors duration-700`}>

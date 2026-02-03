@@ -4,10 +4,11 @@ import { BookOpen, Info, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Sidebar from '../components/Sidebar';
+import useTheme from '../hooks/useTheme';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [isCorporate, setIsCorporate] = useState(false);
+    const { isCorporate, toggleTheme } = useTheme();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [user, setUser] = useState({ username: 'Invitado', role: 'usuario' });
 
@@ -20,13 +21,6 @@ const Dashboard = () => {
         }
     }, [navigate]);
 
-    const toggleTheme = () => {
-        const newMode = !isCorporate;
-        setIsCorporate(newMode);
-        toast.success(`Modo ${newMode ? 'Corporativo' : 'Comunidad'} activado`, {
-            description: newMode ? "Interfaz robusta de gestión activada." : "Ambiente de aprendizaje amigable cargado.",
-        });
-    };
 
     const handleSoon = (feature) => {
         toast.info(`${feature} llegará pronto.`, {
