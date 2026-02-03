@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from src.core.config import settings
 from src.core.database import init_beanie_db
 from src.api.v1.router import api_router
+import logging
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,6 +28,19 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
+    # Global Exception Handler to ensure CORS headers are applied to 500s
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logging.error(f"Global error: {exc}", exc_info=True)
+        response = JSONResponse(
+            status_code=500,
+            content={"detail": "Internal Server Error", "error": str(exc)},
+        )
+        origin = request.headers.get("origin")
+        if origin:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
 
     # Set all CORS enabled origins
     app.add_middleware(
