@@ -52,7 +52,8 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db)):
         username=user_in.username,
         hashed_password=get_password_hash(raw_password),
         role=user_in.role,
-        identity=user_in.identity
+        identity=user_in.identity,
+        is_active=False if user_in.identity == UserIdentity.CORPORATE else True
     )
     db.add(db_user)
     try:
@@ -93,3 +94,18 @@ def update_user(user_id: int, user_in: UserUpdate, db: Session = Depends(get_db)
     db.commit()
     db.refresh(user)
     return user
+
+@router.get("/pending")
+def get_pending_users(db: Session = Depends(get_db)):
+    # In a real app, verify that the requester is an ADMIN
+    return db.query(User).filter(User.is_active == False).all()
+
+@router.patch("/{user_id}/activate")
+def activate_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    user.is_active = True
+    db.commit()
+    return {"message": f"Usuario {user.username} activado correctamente"}

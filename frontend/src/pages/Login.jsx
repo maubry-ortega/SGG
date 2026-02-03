@@ -12,6 +12,7 @@ const Login = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [loginMode, setLoginMode] = useState('community'); // 'community' or 'corporate'
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,6 +27,9 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(response.data.user));
             localStorage.setItem('access_token', response.data.access_token);
 
+            // Set theme based on selected login mode
+            localStorage.setItem('sggi_theme', JSON.stringify(loginMode === 'corporate'));
+
             navigate('/dashboard');
         } catch (err) {
             setError('Usuario o contraseña incorrectos');
@@ -37,25 +41,34 @@ const Login = () => {
     return (
         <div className="min-h-screen flex items-center justify-center p-8 bg-midnight relative overflow-hidden">
             {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyber-blue/5 blur-[120px] rounded-full -z-10 animate-pulse"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyber-purple/5 blur-[120px] rounded-full -z-10"></div>
+            <div className={`absolute top-0 right-0 w-[500px] h-[500px] blur-[120px] rounded-full -z-10 animate-pulse transition-colors duration-1000 ${loginMode === 'corporate' ? 'bg-energy-orange/10' : 'bg-cyber-blue/10'}`}></div>
+            <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] blur-[120px] rounded-full -z-10 transition-colors duration-1000 ${loginMode === 'corporate' ? 'bg-energy-orange/5' : 'bg-cyber-purple/5'}`}></div>
 
             <div className="max-w-6xl w-full flex flex-col lg:flex-row items-center gap-16">
 
                 {/* Left Side: Mascot & Info */}
                 <motion.div
+                    key={loginMode}
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="flex-1 hidden lg:flex flex-col items-center text-center space-y-8"
                 >
                     <div className="mascot-container w-full max-w-sm relative">
-                        <div className="mascot-glow scale-150"></div>
-                        <img src="/assets/pulpo_usuarios.png" className="w-full animate-float" alt="Saggi Welcome" />
+                        <div className={`mascot-glow scale-150 ${loginMode === 'corporate' ? 'after:bg-energy-orange/30' : ''}`}></div>
+                        <img
+                            src={loginMode === 'corporate' ? "/assets/pulpo_corporativo.png" : "/assets/pulpo_usuarios.png"}
+                            className="w-full animate-float transition-all duration-500"
+                            alt="Saggi Welcome"
+                        />
                     </div>
                     <div>
-                        <h2 className="text-4xl font-black mb-4">Acceso Seguro</h2>
+                        <h2 className="text-4xl font-black mb-4">
+                            {loginMode === 'corporate' ? 'Gestión SGG' : 'Acceso Seguro'}
+                        </h2>
                         <p className="text-slate-400 max-w-sm mx-auto font-medium">
-                            Saggi está listo para cargar tus recursos. Ingresa tus credenciales para continuar tu progreso.
+                            {loginMode === 'corporate'
+                                ? 'Entra para administrar los recursos y validar contenido de la red.'
+                                : 'Saggi está listo para cargar tus recursos. Ingresa tus credenciales para continuar tu progreso.'}
                         </p>
                     </div>
                 </motion.div>
@@ -75,12 +88,38 @@ const Login = () => {
                         </button>
 
                         <div className="mb-10 text-center lg:text-left">
-                            <div className="inline-flex items-center gap-3 px-4 py-1.5 glass rounded-full mb-6 border-cyber-blue/20">
-                                <ShieldCheck size={14} className="text-cyan-400" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Autenticación Core SGG</span>
+                            <div className="flex gap-2 mb-8 p-1 glass rounded-2xl border-white/5">
+                                <button
+                                    onClick={() => setLoginMode('community')}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${loginMode === 'community' ? 'bg-cyber-blue text-white shadow-lg shadow-cyber-blue/20' : 'text-slate-500 hover:text-white'}`}
+                                >
+                                    <Rocket size={14} /> Comunidad
+                                </button>
+                                <button
+                                    onClick={() => setLoginMode('corporate')}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${loginMode === 'corporate' ? 'bg-energy-orange text-white shadow-lg shadow-energy-orange/20' : 'text-slate-500 hover:text-white'}`}
+                                >
+                                    <ShieldCheck size={14} /> Corporativo
+                                </button>
                             </div>
-                            <h1 className="text-4xl font-black mb-2 tracking-tighter">Iniciar Sesión</h1>
-                            <p className="text-slate-400 font-medium">Introduce tus datos de acceso.</p>
+
+                            <div className="inline-flex items-center gap-3 px-4 py-1.5 glass rounded-full mb-6 border-white/5">
+                                {loginMode === 'corporate' ? (
+                                    <>
+                                        <ShieldCheck size={14} className="text-energy-orange" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-energy-orange">SGG Management Node</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Rocket size={14} className="text-cyan-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">SGG Community Access</span>
+                                    </>
+                                )}
+                            </div>
+                            <h1 className="text-4xl font-black mb-2 tracking-tighter">Bienvenido</h1>
+                            <p className="text-slate-400 font-medium">
+                                {loginMode === 'corporate' ? 'Accede al panel de administración.' : 'Ingresa a tu entorno de aprendizaje.'}
+                            </p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -125,8 +164,15 @@ const Login = () => {
                             </div>
 
                             <div className="pt-4">
-                                <button type="submit" disabled={loading} className="btn-primary w-full h-16 text-lg">
-                                    {loading ? 'Accediendo...' : 'Entrar al Nivel'}
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className={`w-full h-16 text-lg font-black uppercase tracking-widest rounded-2xl border-none transition-all duration-300 shadow-lg ${loginMode === 'corporate'
+                                            ? 'bg-energy-orange text-white hover:bg-orange-600 shadow-energy-orange/20'
+                                            : 'bg-cyber-blue text-white hover:bg-cyan-500 shadow-cyber-blue/20'
+                                        }`}
+                                >
+                                    {loading ? 'Accediendo...' : (loginMode === 'corporate' ? 'Entrar como Admin' : 'Entrar a la Comunidad')}
                                 </button>
                             </div>
 

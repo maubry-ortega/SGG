@@ -9,6 +9,13 @@ class ResourceLevel(str, enum.Enum):
     INTERMEDIATE = "intermediate"
     ADVANCED = "advanced"
 
+class ResourceCategory(str, enum.Enum):
+    GAME = "game"
+    TECNOLOGIA = "tecnologia"
+    AGRICULTURA = "agricultura"
+    LIMPIEZA = "limpieza"
+    OTROS = "otros"
+
 class InteractionMetrics(BaseModel):
     views: int = 0
     downloads: int = 0
@@ -20,6 +27,7 @@ class SaggiResource(Document):
     instructor_id: Optional[int] = None
     tags: List[str] = []
     level: ResourceLevel = ResourceLevel.BASIC
+    category: ResourceCategory = ResourceCategory.OTROS
     file_url: str
     uploader_id: int = 0  # To link with SQL User
     is_approved: bool = False

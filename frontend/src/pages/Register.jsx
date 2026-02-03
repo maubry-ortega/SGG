@@ -9,7 +9,8 @@ const Register = () => {
     const [formData, setFormData] = useState({
         full_name: '',
         email: '',
-        username: ''
+        username: '',
+        identity: 'community' // community or corporate
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -94,7 +95,12 @@ const Register = () => {
                                     <div>
                                         <h2 className="text-3xl font-black mb-4 tracking-tight">¡Genial! Ya casi estás.</h2>
                                         <p className="text-slate-400 leading-relaxed font-medium">
-                                            Hemos enviado tu contraseña generada a <strong className="text-white bg-white/5 px-2 py-1 rounded-lg">{formData.email}</strong>.
+                                            {formData.identity === 'corporate'
+                                                ? "Tu registro ha sido enviado. Un administrador debe aprobar tu cuenta corporativa antes de que puedas iniciar sesión."
+                                                : `Hemos enviado tu contraseña generada a `}
+                                            {formData.identity !== 'corporate' && (
+                                                <strong className="text-white bg-white/5 px-2 py-1 rounded-lg">{formData.email}</strong>
+                                            )}
                                         </p>
                                     </div>
                                     <button onClick={() => navigate('/login')} className="btn-primary w-full h-16 text-lg">
@@ -112,6 +118,23 @@ const Register = () => {
                                             {error}
                                         </div>
                                     )}
+
+                                    <div className="flex gap-2 p-1 glass rounded-2xl border-white/5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData({ ...formData, identity: 'community' })}
+                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.identity === 'community' ? 'bg-cyber-blue text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                                        >
+                                            Comunidad
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData({ ...formData, identity: 'corporate' })}
+                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.identity === 'corporate' ? 'bg-energy-orange text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                                        >
+                                            Corporativo
+                                        </button>
+                                    </div>
 
                                     <div className="space-y-2">
                                         <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-2">Nombre Completo</label>

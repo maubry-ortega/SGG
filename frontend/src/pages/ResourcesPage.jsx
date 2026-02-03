@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Upload, Shield } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import ResourceUpload from '../components/ResourceUpload';
-import { ResourceExplorer, AdminResourcePanel } from '../components/Resources';
+import { ResourceExplorer, AdminResourcePanel, AdminUserPanel } from '../components/Resources';
 import useTheme from '../hooks/useTheme';
 
 const ResourcesPage = () => {
     const { isCorporate, toggleTheme } = useTheme();
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     return (
         <div className={`flex min-h-screen ${isCorporate ? 'theme-corporate bg-[#0a0f1e]' : 'bg-midnight'} transition-colors duration-700`}>
@@ -39,6 +47,14 @@ const ResourcesPage = () => {
                     <AdminResourcePanel
                         refreshTrigger={refreshTrigger}
                         onAction={() => setRefreshTrigger(prev => prev + 1)}
+                        isCorporate={isCorporate}
+                        user={user}
+                    />
+
+                    <AdminUserPanel
+                        refreshTrigger={refreshTrigger}
+                        isCorporate={isCorporate}
+                        user={user}
                     />
 
                     <div>
@@ -46,7 +62,11 @@ const ResourcesPage = () => {
                             <BookOpen size={20} />
                             <span className="font-black uppercase tracking-[0.2em] text-xs">Catálogo Público</span>
                         </div>
-                        <ResourceExplorer refreshTrigger={refreshTrigger} />
+                        <ResourceExplorer
+                            refreshTrigger={refreshTrigger}
+                            isCorporate={isCorporate}
+                            user={user}
+                        />
                     </div>
                 </section>
 

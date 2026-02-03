@@ -52,13 +52,11 @@ const Sidebar = ({ isCorporate, toggleTheme }) => {
             </nav>
 
             <div className="mt-auto space-y-4 pt-8 border-t border-white/5">
-                <button
-                    onClick={toggleTheme}
-                    className="w-full flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/10 text-sm font-bold"
-                >
-                    <div className={`w-3 h-3 rounded-full ${isCorporate ? 'bg-cyan-400' : 'bg-energy-orange'}`}></div>
-                    Ver Modo {isCorporate ? 'Comunidad' : 'Corporativo'}
-                </button>
+                <div className="px-4 py-2 opacity-50">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                        Sesión en Modo {isCorporate ? 'Corporativo' : 'Comunidad'}
+                    </span>
+                </div>
 
                 <NavItem icon={<Settings size={22} />} label="Configuración" path="/settings" />
                 <NavItem icon={<User size={22} />} label="Mi Perfil" path="/profile" />

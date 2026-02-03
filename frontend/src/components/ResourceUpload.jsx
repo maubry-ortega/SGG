@@ -8,6 +8,7 @@ const ResourceUpload = ({ isOpen, onClose, onUploadSuccess }) => {
     const [file, setFile] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('otros');
     const [uploading, setUploading] = useState(false);
 
     const handleFileChange = (e) => {
@@ -30,7 +31,8 @@ const ResourceUpload = ({ isOpen, onClose, onUploadSuccess }) => {
         formData.append('title', title);
         formData.append('description', description);
         formData.append('level', 'basic');
-        formData.append('tags', 'pdf,recurso');
+        formData.append('category', category);
+        formData.append('tags', `pdf,recurso,${category}`);
 
         // Link with current logged-in user session
         const storedUser = localStorage.getItem('user');
@@ -50,6 +52,7 @@ const ResourceUpload = ({ isOpen, onClose, onUploadSuccess }) => {
             setFile(null);
             setTitle('');
             setDescription('');
+            setCategory('otros');
         } catch (err) {
             toast.error("Error al subir el archivo.");
         } finally {
@@ -103,6 +106,21 @@ const ResourceUpload = ({ isOpen, onClose, onUploadSuccess }) => {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-2">Categoría</label>
+                                <select
+                                    className="input-field appearance-none cursor-pointer"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                >
+                                    <option value="game">Gaming / Juegos</option>
+                                    <option value="tecnologia">Tecnología / IT</option>
+                                    <option value="agricultura">Agricultura / Campo</option>
+                                    <option value="limpieza">Higiene / Limpieza</option>
+                                    <option value="otros">Otros / General</option>
+                                </select>
                             </div>
 
                             <div className="space-y-2">

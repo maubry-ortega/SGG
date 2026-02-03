@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import List, Optional
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, status, Depends
-from src.shared.models.resource import SaggiResource, ResourceLevel
+from src.shared.models.resource import SaggiResource, ResourceLevel, ResourceCategory
 from src.shared.models.user import User
 from src.core.database import get_db
 from sqlalchemy.orm import Session
@@ -18,6 +18,7 @@ async def upload_pdf(
     title: str = Form(...),
     description: str = Form(...),
     level: ResourceLevel = Form(ResourceLevel.BASIC),
+    category: ResourceCategory = Form(ResourceCategory.OTROS),
     tags: str = Form(""),
     uploader_id: int = Form(0),
     file: UploadFile = File(...)
@@ -35,6 +36,7 @@ async def upload_pdf(
         title=title,
         description=description,
         level=level,
+        category=category,
         tags=tags.split(",") if tags else [],
         file_url=file_url,
         uploader_id=uploader_id,
